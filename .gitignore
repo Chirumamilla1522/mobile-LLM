@@ -1,0 +1,8 @@
+.DS_Store
+.venv/
+**/xcuserdata/
+build/
+build_ios/
+**/*.mllm
+mobile/ios/.build/
+mobile/ios/runtime_rust/target/

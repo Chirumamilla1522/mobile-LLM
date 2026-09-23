@@ -1,0 +1,403 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		76115EB817604646BFBB69D0 /* NanoEdgeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706F3B696B514CD4A59027B4 /* NanoEdgeApp.swift */; };
+		313E1AAB8B014A8CB0B26596 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37783A993EF411FB1F34DB4 /* ContentView.swift */; };
+		10BBC96C8F9447A388FF9D03 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A055CA2A77A4458BFE9C667 /* FeaturesView.swift */; };
+		B51AC704C17140619E4B8520 /* StudioTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848BB5BFA89949589AF2FCA9 /* StudioTheme.swift */; };
+		5B384443FA664493A0EDEECF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F61146036A440EA4F7385C /* ChatView.swift */; };
+		44B14349C40344EFB90CF60E /* AppsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3751E51896C42EB9D56EC37 /* AppsView.swift */; };
+		ED26FB1D3F79416698728F27 /* BenchmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BDA1DDFB0241CA913CDBA8 /* BenchmarkView.swift */; };
+		172BD352C2B349509477B067 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311B9186B64E4226AF6F2B5F /* SpeechManager.swift */; };
+		3A09AE87728949C4861C7F68 /* DocumentScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59E642F8836475095D78CA8 /* DocumentScannerView.swift */; };
+		9CB30C39ED5E4A9F9A08CA01 /* DeviceToolRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EFC706B4294A6B85760E79 /* DeviceToolRegistry.swift */; };
+		DE51CEB398C448FEB029099E /* LocalRAGStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B70D1873B411A889F45AF /* LocalRAGStore.swift */; };
+		E7E9B7A88756414880E87686 /* VoiceOrbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D807847AC7C4726BF2C2B5C /* VoiceOrbView.swift */; };
+		901537A7AB5641C7A921F3A1 /* LiveCameraVisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500EA98AA2BB4BBC9592689B /* LiveCameraVisionView.swift */; };
+		B820F5B7C9814CAB9DA58215 /* DynamicIslandHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BBD247FA034D18A72FA559 /* DynamicIslandHUD.swift */; };
+		0A0BE2238E03481893CCBD7C /* NanoEdgeBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = E72A58A9EFCC4E05A59AA6FF /* NanoEdgeBridge.mm */; };
+		DFCFB3AAA2FA4EE79F300CB6 /* memory_mapped_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5AE34AAC2CC4F0BBAA9596D /* memory_mapped_model.cpp */; };
+		B4082697C91E42CDB397BC4D /* arena_allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6A273E466DA48B7BAF00C6B /* arena_allocator.cpp */; };
+		ED26F5CA0D9A489E9A4EB680 /* neon_gemv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8663435138FB47D585136F73 /* neon_gemv.cpp */; };
+		6E4169EC588D49CF843A2905 /* metal_backend.mm in Sources */ = {isa = PBXBuildFile; fileRef = 546438CD23B44BA3AD7EB619 /* metal_backend.mm */; };
+		A18A18A18A18A18A18A18001 /* NanoEdgeKernels.metal in Sources */ = {isa = PBXBuildFile; fileRef = A18A18A18A18A18A18A18002 /* NanoEdgeKernels.metal */; };
+		B563787F3424467890DBA35C /* smollm2_vocab.json in Resources */ = {isa = PBXBuildFile; fileRef = 16638801F0694E318092B571 /* smollm2_vocab.json */; };
+		0297DBB428E547F79C6C74BC /* llama3_vocab.json in Resources */ = {isa = PBXBuildFile; fileRef = D8305767A7F64078B38DD27E /* llama3_vocab.json */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4B99D70D1FA94D7E86AB28DE /* NanoEdge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NanoEdge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		706F3B696B514CD4A59027B4 /* NanoEdgeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NanoEdgeApp.swift; sourceTree = "<group>"; };
+		A37783A993EF411FB1F34DB4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9A055CA2A77A4458BFE9C667 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
+		848BB5BFA89949589AF2FCA9 /* StudioTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioTheme.swift; sourceTree = "<group>"; };
+		70F61146036A440EA4F7385C /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		C3751E51896C42EB9D56EC37 /* AppsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsView.swift; sourceTree = "<group>"; };
+		98BDA1DDFB0241CA913CDBA8 /* BenchmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchmarkView.swift; sourceTree = "<group>"; };
+		311B9186B64E4226AF6F2B5F /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
+		D59E642F8836475095D78CA8 /* DocumentScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerView.swift; sourceTree = "<group>"; };
+		46EFC706B4294A6B85760E79 /* DeviceToolRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceToolRegistry.swift; sourceTree = "<group>"; };
+		B62B70D1873B411A889F45AF /* LocalRAGStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalRAGStore.swift; sourceTree = "<group>"; };
+		0D807847AC7C4726BF2C2B5C /* VoiceOrbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceOrbView.swift; sourceTree = "<group>"; };
+		500EA98AA2BB4BBC9592689B /* LiveCameraVisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCameraVisionView.swift; sourceTree = "<group>"; };
+		A1BBD247FA034D18A72FA559 /* DynamicIslandHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicIslandHUD.swift; sourceTree = "<group>"; };
+		A69761FCE3A145C88B6198B9 /* NanoEdgeBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NanoEdgeBridge.h; sourceTree = "<group>"; };
+		AD5B5E336EC4474FAA8B10F7 /* nanoedge_rust.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nanoedge_rust.h; sourceTree = "<group>"; };
+		E72A58A9EFCC4E05A59AA6FF /* NanoEdgeBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = NanoEdgeBridge.mm; sourceTree = "<group>"; };
+		F5AE34AAC2CC4F0BBAA9596D /* memory_mapped_model.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ../../src/runtime/memory_mapped_model.cpp; sourceTree = SOURCE_ROOT; };
+		C6A273E466DA48B7BAF00C6B /* arena_allocator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ../../src/runtime/arena_allocator.cpp; sourceTree = SOURCE_ROOT; };
+		8663435138FB47D585136F73 /* neon_gemv.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ../../src/kernels/cpu/neon_gemv.cpp; sourceTree = SOURCE_ROOT; };
+		546438CD23B44BA3AD7EB619 /* metal_backend.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ../../src/kernels/metal/metal_backend.mm; sourceTree = SOURCE_ROOT; };
+		A18A18A18A18A18A18A18002 /* NanoEdgeKernels.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = NanoEdgeKernels.metal; sourceTree = "<group>"; };
+		B343D0B10D974F79AE0D00DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D1F9F63330514598A1CB7749 /* NanoEdge.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NanoEdge.entitlements; sourceTree = "<group>"; };
+		16638801F0694E318092B571 /* smollm2_vocab.json */ = {isa = PBXFileReference; lastKnownFileType = file; path = smollm2_vocab.json; sourceTree = "<group>"; };
+		D8305767A7F64078B38DD27E /* llama3_vocab.json */ = {isa = PBXFileReference; lastKnownFileType = file; path = llama3_vocab.json; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0B4757FB382C489988C98EF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5AB2874D11004D668D17857B = {
+			isa = PBXGroup;
+			children = (
+				6ADDB5455A44414293EB7F4B /* NanoEdgeApp */,
+				B8C7561575074CE381F852F7 /* Resources */,
+				2DD0680EE4DD432B91678D8B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2DD0680EE4DD432B91678D8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4B99D70D1FA94D7E86AB28DE /* NanoEdge.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6ADDB5455A44414293EB7F4B /* NanoEdgeApp */ = {
+			isa = PBXGroup;
+			children = (
+				706F3B696B514CD4A59027B4 /* NanoEdgeApp.swift */,
+				A37783A993EF411FB1F34DB4 /* ContentView.swift */,
+				9A055CA2A77A4458BFE9C667 /* FeaturesView.swift */,
+				848BB5BFA89949589AF2FCA9 /* StudioTheme.swift */,
+				70F61146036A440EA4F7385C /* ChatView.swift */,
+				C3751E51896C42EB9D56EC37 /* AppsView.swift */,
+				98BDA1DDFB0241CA913CDBA8 /* BenchmarkView.swift */,
+				311B9186B64E4226AF6F2B5F /* SpeechManager.swift */,
+				D59E642F8836475095D78CA8 /* DocumentScannerView.swift */,
+				46EFC706B4294A6B85760E79 /* DeviceToolRegistry.swift */,
+				B62B70D1873B411A889F45AF /* LocalRAGStore.swift */,
+				0D807847AC7C4726BF2C2B5C /* VoiceOrbView.swift */,
+				500EA98AA2BB4BBC9592689B /* LiveCameraVisionView.swift */,
+				A1BBD247FA034D18A72FA559 /* DynamicIslandHUD.swift */,
+				A69761FCE3A145C88B6198B9 /* NanoEdgeBridge.h */,
+				AD5B5E336EC4474FAA8B10F7 /* nanoedge_rust.h */,
+				E72A58A9EFCC4E05A59AA6FF /* NanoEdgeBridge.mm */,
+				F5AE34AAC2CC4F0BBAA9596D /* memory_mapped_model.cpp */,
+				C6A273E466DA48B7BAF00C6B /* arena_allocator.cpp */,
+				8663435138FB47D585136F73 /* neon_gemv.cpp */,
+				546438CD23B44BA3AD7EB619 /* metal_backend.mm */,
+				A18A18A18A18A18A18A18002 /* NanoEdgeKernels.metal */,
+				B343D0B10D974F79AE0D00DE /* Info.plist */,
+				D1F9F63330514598A1CB7749 /* NanoEdge.entitlements */,
+			);
+			name = NanoEdgeApp;
+			path = NanoEdgeApp;
+			sourceTree = "<group>";
+		};
+		B8C7561575074CE381F852F7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				16638801F0694E318092B571 /* smollm2_vocab.json */,
+				D8305767A7F64078B38DD27E /* llama3_vocab.json */,
+			);
+			name = Resources;
+			path = NanoEdgeApp/Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		065734394ECE4A8FB62C39B2 /* NanoEdge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 407F061579DB4AC383A5703F /* Build configuration list for PBXNativeTarget "NanoEdge" */;
+			buildPhases = (
+				4D046DA257CF426A975C8FBD /* Sources */,
+				0B4757FB382C489988C98EF1 /* Frameworks */,
+				1FF27234D521402EAF5714AD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NanoEdge;
+			packageProductDependencies = (
+			);
+			productName = NanoEdge;
+			productReference = 4B99D70D1FA94D7E86AB28DE /* NanoEdge.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4F62A697C2AA49CB8518CE50 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					065734394ECE4A8FB62C39B2 = {
+						CreatedOnToolsVersion = 15.0;
+						DevelopmentTeam = 5HAT35ND22;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 9DB917A9B8924D43A13BE6E7 /* Build configuration list for PBXProject "NanoEdge" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5AB2874D11004D668D17857B;
+			packageReferences = (
+			);
+			productRefGroup = 2DD0680EE4DD432B91678D8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				065734394ECE4A8FB62C39B2 /* NanoEdge */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1FF27234D521402EAF5714AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B563787F3424467890DBA35C /* smollm2_vocab.json in Resources */,
+				0297DBB428E547F79C6C74BC /* llama3_vocab.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4D046DA257CF426A975C8FBD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				76115EB817604646BFBB69D0 /* NanoEdgeApp.swift in Sources */,
+				313E1AAB8B014A8CB0B26596 /* ContentView.swift in Sources */,
+				10BBC96C8F9447A388FF9D03 /* FeaturesView.swift in Sources */,
+				B51AC704C17140619E4B8520 /* StudioTheme.swift in Sources */,
+				5B384443FA664493A0EDEECF /* ChatView.swift in Sources */,
+				44B14349C40344EFB90CF60E /* AppsView.swift in Sources */,
+				ED26FB1D3F79416698728F27 /* BenchmarkView.swift in Sources */,
+				172BD352C2B349509477B067 /* SpeechManager.swift in Sources */,
+				3A09AE87728949C4861C7F68 /* DocumentScannerView.swift in Sources */,
+				9CB30C39ED5E4A9F9A08CA01 /* DeviceToolRegistry.swift in Sources */,
+				DE51CEB398C448FEB029099E /* LocalRAGStore.swift in Sources */,
+				E7E9B7A88756414880E87686 /* VoiceOrbView.swift in Sources */,
+				901537A7AB5641C7A921F3A1 /* LiveCameraVisionView.swift in Sources */,
+				B820F5B7C9814CAB9DA58215 /* DynamicIslandHUD.swift in Sources */,
+				0A0BE2238E03481893CCBD7C /* NanoEdgeBridge.mm in Sources */,
+				DFCFB3AAA2FA4EE79F300CB6 /* memory_mapped_model.cpp in Sources */,
+				B4082697C91E42CDB397BC4D /* arena_allocator.cpp in Sources */,
+				ED26F5CA0D9A489E9A4EB680 /* neon_gemv.cpp in Sources */,
+				6E4169EC588D49CF843A2905 /* metal_backend.mm in Sources */,
+				A18A18A18A18A18A18A18001 /* NanoEdgeKernels.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		70D0C2CBAF804413845659CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F842930B12B3467BBD602EFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0BC0C4B5EE7A4604A8C50742 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = NanoEdgeApp/NanoEdge.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5HAT35ND22;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/NanoEdgeApp",
+					"$(SRCROOT)/../../include",
+					"$(SRCROOT)/../../src",
+				);
+				INFOPLIST_FILE = NanoEdgeApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/NanoEdgeApp",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					"Metal",
+					"-framework",
+					"Foundation",
+					"-framework",
+					"UIKit",
+					"-framework",
+					"Vision",
+					"-framework",
+					"Speech",
+					"-framework",
+					"AVFoundation",
+					"-lruntime_rust",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nanoedge.NanoEdgeApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = NanoEdgeApp/NanoEdgeBridge.h;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		94716038B09A4A6292713756 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = NanoEdgeApp/NanoEdge.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5HAT35ND22;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/NanoEdgeApp",
+					"$(SRCROOT)/../../include",
+					"$(SRCROOT)/../../src",
+				);
+				INFOPLIST_FILE = NanoEdgeApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/NanoEdgeApp",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					"Metal",
+					"-framework",
+					"Foundation",
+					"-framework",
+					"UIKit",
+					"-framework",
+					"Vision",
+					"-framework",
+					"Speech",
+					"-framework",
+					"AVFoundation",
+					"-lruntime_rust",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nanoedge.NanoEdgeApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = NanoEdgeApp/NanoEdgeBridge.h;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9DB917A9B8924D43A13BE6E7 /* Build configuration list for PBXProject "NanoEdge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70D0C2CBAF804413845659CB /* Debug */,
+				F842930B12B3467BBD602EFA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		407F061579DB4AC383A5703F /* Build configuration list for PBXNativeTarget "NanoEdge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BC0C4B5EE7A4604A8C50742 /* Debug */,
+				94716038B09A4A6292713756 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = 4F62A697C2AA49CB8518CE50 /* Project object */;
+}
