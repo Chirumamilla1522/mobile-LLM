@@ -26,10 +26,8 @@ public struct VoiceOrbView: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("VOICE / ON DEVICE")
-                        .font(StudioTheme.body(.caption, weight: .bold))
-                        .tracking(2)
-                        .foregroundStyle(StudioTheme.ember)
+                    Text("Voice")
+                        .font(StudioTheme.heading(.title3, weight: .semibold))
                     Text(activeModelName)
                         .font(StudioTheme.body(.subheadline))
                         .foregroundStyle(StudioTheme.titanium)

@@ -59,33 +59,21 @@ public struct AppsView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    VStack(alignment: .leading, spacing: 26) {
-                        Text("INSTRUMENTS / 03")
-                            .font(StudioTheme.body(.caption2, weight: .bold))
-                            .tracking(1.6)
-                            .foregroundStyle(StudioTheme.ember)
-                        Text("Instruments")
-                            .font(StudioTheme.heading(.largeTitle, weight: .bold))
-                            .tracking(-1.5)
-                    }
-                    .padding(.bottom, 12)
+                    Text("Instruments")
+                        .font(StudioTheme.heading(.largeTitle, weight: .bold))
+                        .tracking(-1.5)
+                        .padding(.bottom, 12)
 
-                    // Tool Selector Carousel (Pill Bar)
                     toolPickerSection
                     
-                    // Hardware & Engine Status Pill
                     modelAndEngineBar
                     
-                    // Configuration & Presets
                     toolConfigurationCard
                     
-                    // Input Card
                     inputEditorCard
                     
-                    // Primary Action Button
                     actionButton
                     
-                    // Streaming Output Card
                     if !outputText.isEmpty || isGenerating {
                         outputResultCard
                             .transition(reduceMotion ? .opacity : .opacity.combined(with: .move(edge: .bottom)))
@@ -116,7 +104,7 @@ public struct AppsView: View {
     
     private var toolPickerSection: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
+            HStack(spacing: 22) {
                 ForEach(AITool.allCases) { tool in
                     let isSelected = (selectedTool == tool)
                     Button(action: {
@@ -125,34 +113,25 @@ public struct AppsView: View {
                             loadInitialPresetIfNeeded()
                         }
                     }) {
-                        HStack(spacing: 6) {
-                            StudioIcon(tool.symbol)
-                                .frame(width: 14, height: 14)
-                            Text(tool.rawValue)
-                                .font(StudioTheme.body(.footnote, weight: .semibold))
-                                .lineLimit(1)
-                                .fixedSize(horizontal: true, vertical: false)
-                        }
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(isSelected ? tool.accentColor.opacity(0.18) : StudioTheme.surface)
-                        .foregroundStyle(isSelected ? tool.accentColor : Color.secondary)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(isSelected ? tool.accentColor.opacity(0.45) : StudioTheme.border, lineWidth: 1)
-                        )
+                        Text(tool.rawValue)
+                            .font(StudioTheme.body(.subheadline, weight: isSelected ? .semibold : .regular))
+                            .foregroundStyle(isSelected ? .primary : .secondary)
+                            .frame(minHeight: 48)
+                            .fixedSize(horizontal: true, vertical: false)
+                            .overlay(alignment: .bottom) {
+                                (isSelected ? StudioTheme.ember : Color.clear).frame(height: 2)
+                            }
                     }
-                    .bouncyPress()
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(isSelected ? .isSelected : [])
                 }
             }
-            .padding(.horizontal, 2)
         }
+        .background(alignment: .bottom) { StudioTheme.border.frame(height: 1) }
     }
     
     private var modelAndEngineBar: some View {
         HStack {
-            // Model Menu
             Menu {
                 ForEach(discoveredModels) { model in
                     Button(action: { switchModel(model) }) {
@@ -166,69 +145,38 @@ public struct AppsView: View {
                 }
             } label: {
                 HStack(spacing: 5) {
-                    StudioIcon(.cpu)
-                        .frame(width: 12, height: 12)
-                        .foregroundStyle(StudioTheme.titanium)
                     Text(activeModelName.replacingOccurrences(of: "_instruct_q4", with: "").replacingOccurrences(of: "_q4", with: ""))
                         .font(StudioTheme.body(.caption, weight: .semibold))
                         .foregroundStyle(.primary)
+                        .lineLimit(1)
                     StudioIcon(.chevronDown)
-                        .frame(width: 10, height: 10)
+                        .frame(width: 9, height: 9)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(StudioTheme.surfaceRaised)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 0.8)
-                )
             }
             
-            // Engine Toggle
             Button(action: toggleEngine) {
                 HStack(spacing: 4) {
-                    StudioIcon(selectedEngine == .metalGPU ? .zap : .cpu)
-                        .frame(width: 11, height: 11)
-                        .foregroundStyle(StudioTheme.ember)
                     Text(selectedEngine == .metalGPU ? "Metal GPU" : "NEON CPU")
                         .font(StudioTheme.body(.caption, weight: .semibold))
+                    Image(systemName: "arrow.left.arrow.right")
+                        .font(StudioTheme.body(.caption2))
                 }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(StudioTheme.surfaceRaised)
-                .foregroundStyle(StudioTheme.ember)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 1)
-                )
+                .foregroundStyle(.secondary)
             }
-            .bouncyPress()
+            .studioPress()
+            .accessibilityLabel("Switch compute engine")
             
             Spacer()
             
             if isGenerating {
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(StudioTheme.phosphor)
-                        .frame(width: 6, height: 6)
-                    Text(String(format: "%.1f tok/s", currentTokPerSec))
-                        .font(StudioTheme.body(.caption, weight: .semibold))
-                        .foregroundStyle(StudioTheme.phosphor)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(StudioTheme.phosphor.opacity(0.12))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                Text(String(format: "%.1f tok/s", currentTokPerSec))
+                    .font(StudioTheme.body(.caption, weight: .semibold))
+                    .foregroundStyle(.secondary)
             } else {
-                HStack(spacing: 4) {
-                    StudioIcon(.activity)
-                        .frame(width: 11, height: 11)
-                        .foregroundStyle(.secondary)
-                    Text(String(format: "%.0f MB RAM", physicalFootprintMB))
-                        .font(StudioTheme.body(.caption, weight: .semibold))
-                        .foregroundStyle(.secondary)
-                }
+                Text(String(format: "%.0f MB", physicalFootprintMB))
+                    .font(StudioTheme.body(.caption, weight: .semibold))
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(.vertical, 12)
@@ -236,87 +184,59 @@ public struct AppsView: View {
     }
     
     private var toolConfigurationCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(spacing: 0) {
             HStack {
                 Text(modeLabel)
                     .font(StudioTheme.body(.caption, weight: .semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
-            }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+                Menu {
                     ForEach(currentModeOptions, id: \.self) { option in
-                        let isSelected = isModeOptionSelected(option)
-                        Button(action: { setModeOption(option) }) {
-                            Text(option)
-                                .font(StudioTheme.body(.caption, weight: .semibold))
-                                .lineLimit(1)
-                                .fixedSize(horizontal: true, vertical: false)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(isSelected ? selectedTool.accentColor.opacity(0.18) : StudioTheme.surfaceRaised)
-                                .foregroundStyle(isSelected ? selectedTool.accentColor : .primary)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(isSelected ? selectedTool.accentColor.opacity(0.4) : StudioTheme.border, lineWidth: 1)
-                                )
+                        Button {
+                            setModeOption(option)
+                        } label: {
+                            if isModeOptionSelected(option) {
+                                Label(option, systemImage: "checkmark")
+                            } else {
+                                Text(option)
+                            }
                         }
-                        .bouncyPress()
                     }
+                } label: {
+                    Label(currentModeOptions.first(where: isModeOptionSelected) ?? "Choose", systemImage: "chevron.down")
+                        .labelStyle(.titleAndIcon)
+                        .font(StudioTheme.body(.subheadline, weight: .semibold))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
                 }
-                .padding(.horizontal, 2)
             }
-            
-            Divider()
-                .overlay(StudioTheme.border)
-            
+            .frame(minHeight: 50)
+            .overlay(alignment: .bottom) { StudioTheme.border.frame(height: 1) }
+
             HStack {
-                Text("Sample Presets")
+                Text("Example input")
                     .font(StudioTheme.body(.caption, weight: .semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
-            }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+                Menu {
                     ForEach(currentPresets, id: \.name) { preset in
-                        Button(action: {
-                            inputText = preset.content
-                        }) {
-                            HStack(spacing: 5) {
-                                StudioIcon(.fileText)
-                                    .frame(width: 10, height: 10)
-                                    .foregroundStyle(selectedTool.accentColor)
-                                Text(preset.name)
-                                    .font(StudioTheme.body(.caption, weight: .semibold))
-                                    .lineLimit(1)
-                                    .fixedSize(horizontal: true, vertical: false)
-                            }
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .background(StudioTheme.surfaceRaised)
-                            .foregroundStyle(.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 0.8)
-                            )
-                        }
-                        .bouncyPress()
+                        Button(preset.name) { inputText = preset.content }
                     }
+                } label: {
+                    Label("Insert example", systemImage: "chevron.down")
+                        .font(StudioTheme.body(.subheadline, weight: .semibold))
+                        .foregroundStyle(.primary)
                 }
-                .padding(.horizontal, 2)
             }
+            .frame(minHeight: 50)
         }
-        .padding(.vertical, 14)
         .overlay(alignment: .bottom) { StudioTheme.border.frame(height: 1) }
     }
     
     private var inputEditorCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("Source Content")
+                Text("Source content")
                     .font(StudioTheme.body(.caption, weight: .semibold))
                     .foregroundStyle(.secondary)
                 
@@ -328,24 +248,16 @@ public struct AppsView: View {
                 
                 Spacer()
                 
-                // Camera OCR Scanner Button
                 Button(action: { showScannerSheet = true }) {
                     HStack(spacing: 5) {
                         StudioIcon(.camera)
                             .frame(width: 12, height: 12)
-                        Text("Scan Doc")
+                        Text("Scan document")
                     }
                     .font(StudioTheme.body(.caption, weight: .semibold))
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 4)
-                    .background(StudioTheme.ember.opacity(0.14))
-                    .foregroundStyle(StudioTheme.ember)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.ember.opacity(0.3), lineWidth: 0.8)
-                    )
+                    .foregroundStyle(.secondary)
                 }
-                .bouncyPress()
+                .studioPress()
                 
                 if !inputText.isEmpty {
                     Button(action: { inputText = "" }) {
@@ -388,7 +300,7 @@ public struct AppsView: View {
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 }
-                .bouncyPress()
+                .studioPress()
             } else {
                 let isDisabled = inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 Button(action: runInference) {
@@ -405,7 +317,7 @@ public struct AppsView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 }
                 .disabled(isDisabled)
-                .bouncyPress()
+                .studioPress()
             }
         }
     }
@@ -413,18 +325,12 @@ public struct AppsView: View {
     private var outputResultCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                HStack(spacing: 6) {
-                    StudioIcon(selectedTool.symbol)
-                        .frame(width: 14, height: 14)
-                        .foregroundStyle(selectedTool.accentColor)
-                    Text("Generated Output")
-                        .font(StudioTheme.body(.subheadline, weight: .semibold))
-                }
+                Text("Output")
+                    .font(StudioTheme.body(.subheadline, weight: .semibold))
                 
                 Spacer()
                 
                 if !outputText.isEmpty {
-                    // TTS Audio Speaker Button
                     Button(action: {
                         speechManager.toggleSpeech(for: outputText)
                     }) {
@@ -434,18 +340,10 @@ public struct AppsView: View {
                             Text(speechManager.isSpeaking ? "Speaking" : "Listen")
                                 .font(StudioTheme.body(.caption, weight: .semibold))
                         }
-                        .padding(.horizontal, 9)
-                        .padding(.vertical, 4)
-                        .background(StudioTheme.surfaceRaised)
                         .foregroundStyle(speechManager.isSpeaking ? selectedTool.accentColor : .primary)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 0.8)
-                        )
                     }
-                    .bouncyPress()
+                    .studioPress()
                     
-                    // Copy Button
                     Button(action: copyToClipboard) {
                         HStack(spacing: 4) {
                             StudioIcon(copiedToClipboard ? .check : .copy)
@@ -453,16 +351,9 @@ public struct AppsView: View {
                             Text(copiedToClipboard ? "Copied" : "Copy")
                                 .font(StudioTheme.body(.caption, weight: .semibold))
                         }
-                        .padding(.horizontal, 9)
-                        .padding(.vertical, 4)
-                        .background(copiedToClipboard ? StudioTheme.phosphor.opacity(0.18) : StudioTheme.surfaceRaised)
                         .foregroundStyle(copiedToClipboard ? StudioTheme.phosphor : .primary)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8).stroke(copiedToClipboard ? StudioTheme.phosphor.opacity(0.4) : StudioTheme.border, lineWidth: 0.8)
-                        )
                     }
-                    .bouncyPress()
+                    .studioPress()
                 }
             }
             

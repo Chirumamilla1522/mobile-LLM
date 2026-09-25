@@ -12,7 +12,7 @@ public enum StudioTheme {
     public static let phosphor = Color(red: 0.58, green: 0.73, blue: 0.53) // Status only
 
     public static func heading(_ style: Font.TextStyle, weight: Font.Weight = .semibold) -> Font {
-        .custom("PlusJakartaSans-Regular", size: pointSize(for: style), relativeTo: style).weight(weight)
+        .custom("Sora-Regular", size: pointSize(for: style), relativeTo: style).weight(weight)
     }
 
     public static func body(_ style: Font.TextStyle, weight: Font.Weight = .regular) -> Font {
@@ -110,17 +110,13 @@ public struct StudioCardModifier: ViewModifier {
     }
 }
 
-public struct BouncyButtonStyle: ButtonStyle {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
+public struct StudioButtonStyle: ButtonStyle {
     public init() {}
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .frame(minHeight: 44)
             .contentShape(Rectangle())
-            .scaleEffect(!reduceMotion && configuration.isPressed ? 0.98 : 1.0)
             .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .animation(reduceMotion ? nil : .easeOut(duration: 0.16), value: configuration.isPressed)
     }
 }
 
@@ -129,7 +125,7 @@ public extension View {
         modifier(StudioCardModifier())
     }
     
-    func bouncyPress() -> some View {
-        buttonStyle(BouncyButtonStyle())
+    func studioPress() -> some View {
+        buttonStyle(StudioButtonStyle())
     }
 }

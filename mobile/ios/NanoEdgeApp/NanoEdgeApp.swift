@@ -18,8 +18,8 @@ struct NanoEdgeApp: App {
         navigation.configureWithOpaqueBackground()
         navigation.backgroundColor = UIColor(StudioTheme.canvas)
         navigation.shadowColor = UIColor(StudioTheme.border)
-        if let heading = UIFont(name: "PlusJakartaSans-Regular", size: 32),
-           let label = UIFont(name: "PlusJakartaSans-Regular", size: 17) {
+        if let heading = UIFont(name: "Sora-Regular", size: 32),
+           let label = UIFont(name: "Sora-Regular", size: 17) {
             navigation.largeTitleTextAttributes = [.font: heading, .foregroundColor: UIColor.white]
             navigation.titleTextAttributes = [.font: label, .foregroundColor: UIColor.white]
         }

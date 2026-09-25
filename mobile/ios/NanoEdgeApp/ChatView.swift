@@ -143,7 +143,7 @@ public struct ChatView: View {
                     }
                     .disabled(messages.isEmpty || isGenerating)
                     .accessibilityLabel("Clear conversation")
-                    .bouncyPress()
+                    .studioPress()
                 }
             }
             .background(StudioTheme.canvas)
@@ -204,10 +204,6 @@ public struct ChatView: View {
             }
         } label: {
             HStack(spacing: 6) {
-                Circle()
-                    .fill(StudioTheme.phosphor)
-                    .frame(width: 7, height: 7)
-                
                 Text(selectedTier.shortLabel)
                     .font(StudioTheme.body(.subheadline, weight: .semibold))
                     .foregroundStyle(.primary)
@@ -216,13 +212,6 @@ public struct ChatView: View {
                     .frame(width: 10, height: 10)
                     .foregroundStyle(.secondary)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(StudioTheme.surfaceRaised)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(
-                RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 0.8)
-            )
         }
     }
     
@@ -244,17 +233,10 @@ public struct ChatView: View {
             
             if isGenerating {
                 HStack(spacing: 4) {
-                    StudioIcon(.zap)
-                        .frame(width: 10, height: 10)
-                        .foregroundStyle(StudioTheme.phosphor)
                     Text(String(format: "%.1f tok/s", currentTokPerSec))
-                        .font(StudioTheme.body(.caption2, weight: .bold))
-                        .foregroundStyle(StudioTheme.phosphor)
+                        .font(StudioTheme.body(.caption2, weight: .semibold))
+                        .foregroundStyle(.secondary)
                 }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(StudioTheme.phosphor.opacity(0.14))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
             } else {
                 HStack(spacing: 4) {
                     StudioIcon(.cpu)
@@ -275,11 +257,6 @@ public struct ChatView: View {
     
     private var emptyStateView: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("NOTEBOOK / 02")
-                .font(StudioTheme.body(.caption2, weight: .bold))
-                .tracking(1.6)
-                .foregroundStyle(StudioTheme.ember)
-                .padding(.bottom, 28)
             Text("New conversation")
                 .font(StudioTheme.heading(.title2, weight: .semibold))
                 .foregroundStyle(.primary)
@@ -457,7 +434,7 @@ public struct ChatView: View {
                             .overlay(Circle().stroke(StudioTheme.border, lineWidth: 0.8))
                         }
                         .accessibilityLabel(copiedMessageId == msg.id ? "Copied" : "Copy response")
-                        .bouncyPress()
+                        .studioPress()
                         
                         // TTS Speaker Button
                         Button(action: {
@@ -472,7 +449,7 @@ public struct ChatView: View {
                                 .overlay(Circle().stroke(StudioTheme.border, lineWidth: 0.8))
                         }
                         .accessibilityLabel(speechManager.isSpeaking ? "Stop reading response" : "Read response aloud")
-                        .bouncyPress()
+                        .studioPress()
                     }
                     .padding(.horizontal, 4)
                 }
@@ -545,7 +522,7 @@ public struct ChatView: View {
                     .overlay(Circle().stroke(StudioTheme.border, lineWidth: 0.8))
             }
             .accessibilityLabel("More actions")
-            .bouncyPress()
+            .studioPress()
             
             // Text Input Field Container
             HStack(alignment: .bottom, spacing: 8) {
@@ -564,7 +541,7 @@ public struct ChatView: View {
                         .padding(8)
                 }
                 .accessibilityLabel(speechManager.isRecording ? "Stop dictation" : "Dictate prompt")
-                .bouncyPress()
+                .studioPress()
             }
             .background(StudioTheme.surfaceInput)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -584,7 +561,7 @@ public struct ChatView: View {
                         .clipShape(Circle())
                 }
                 .accessibilityLabel("Stop generating")
-                .bouncyPress()
+                .studioPress()
             } else {
                 let hasText = !inputPrompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 Button(action: sendMessage) {
@@ -597,7 +574,7 @@ public struct ChatView: View {
                 }
                 .disabled(!hasText)
                 .accessibilityLabel("Send message")
-                .bouncyPress()
+                .studioPress()
             }
         }
         .padding(.horizontal, 14)

@@ -29,7 +29,7 @@
 		A18A18A18A18A18A18A18001 /* NanoEdgeKernels.metal in Sources */ = {isa = PBXBuildFile; fileRef = A18A18A18A18A18A18A18002 /* NanoEdgeKernels.metal */; };
 		B563787F3424467890DBA35C /* smollm2_vocab.json in Resources */ = {isa = PBXBuildFile; fileRef = 16638801F0694E318092B571 /* smollm2_vocab.json */; };
 		0297DBB428E547F79C6C74BC /* llama3_vocab.json in Resources */ = {isa = PBXBuildFile; fileRef = D8305767A7F64078B38DD27E /* llama3_vocab.json */; };
-		AB0000000000000000000001 /* PlusJakartaSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000003 /* PlusJakartaSans.ttf */; };
+		AB0000000000000000000001 /* Sora.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000003 /* Sora.ttf */; };
 		AB0000000000000000000002 /* SourceSans3.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000004 /* SourceSans3.ttf */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +61,7 @@
 		D1F9F63330514598A1CB7749 /* NanoEdge.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NanoEdge.entitlements; sourceTree = "<group>"; };
 		16638801F0694E318092B571 /* smollm2_vocab.json */ = {isa = PBXFileReference; lastKnownFileType = file; path = smollm2_vocab.json; sourceTree = "<group>"; };
 		D8305767A7F64078B38DD27E /* llama3_vocab.json */ = {isa = PBXFileReference; lastKnownFileType = file; path = llama3_vocab.json; sourceTree = "<group>"; };
-		AB0000000000000000000003 /* PlusJakartaSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fonts/PlusJakartaSans.ttf; sourceTree = "<group>"; };
+		AB0000000000000000000003 /* Sora.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fonts/Sora.ttf; sourceTree = "<group>"; };
 		AB0000000000000000000004 /* SourceSans3.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fonts/SourceSans3.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -130,7 +130,7 @@
 			children = (
 				16638801F0694E318092B571 /* smollm2_vocab.json */,
 				D8305767A7F64078B38DD27E /* llama3_vocab.json */,
-				AB0000000000000000000003 /* PlusJakartaSans.ttf */,
+				AB0000000000000000000003 /* Sora.ttf */,
 				AB0000000000000000000004 /* SourceSans3.ttf */,
 			);
 			name = Resources;
@@ -203,7 +203,7 @@
 			files = (
 				B563787F3424467890DBA35C /* smollm2_vocab.json in Resources */,
 				0297DBB428E547F79C6C74BC /* llama3_vocab.json in Resources */,
-				AB0000000000000000000001 /* PlusJakartaSans.ttf in Resources */,
+				AB0000000000000000000001 /* Sora.ttf in Resources */,
 				AB0000000000000000000002 /* SourceSans3.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

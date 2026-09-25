@@ -45,17 +45,6 @@ public struct FeaturesView: View {
 
     private var introduction: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("NANOEDGE / 01")
-                    .foregroundStyle(StudioTheme.ember)
-                Spacer()
-                Text("PRIVATE COMPUTE")
-                    .foregroundStyle(StudioTheme.titanium)
-            }
-            .font(StudioTheme.body(.caption2, weight: .bold))
-            .tracking(1.6)
-            .padding(.bottom, 28)
-
             Text("Studio")
                 .font(StudioTheme.heading(.largeTitle, weight: .bold))
                 .tracking(-1.5)

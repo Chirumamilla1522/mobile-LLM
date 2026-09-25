@@ -108,9 +108,9 @@ public struct LiveCameraVisionView: View {
                                 StudioIcon(.scan)
                                     .frame(width: 12, height: 12)
                                     .foregroundStyle(StudioTheme.phosphor)
-                                Text("NEURAL OCR SCANNER")
-                                    .font(StudioTheme.body(.caption2, weight: .bold))
-                                    .foregroundStyle(StudioTheme.phosphor)
+                                Text("Live text")
+                                    .font(StudioTheme.body(.caption, weight: .semibold))
+                                    .foregroundStyle(.primary)
                             }
                             Spacer()
                             Text("\(recognizedLines.count) lines detected")

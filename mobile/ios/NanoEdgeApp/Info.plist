@@ -30,7 +30,7 @@
 	<dict/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>PlusJakartaSans.ttf</string>
+		<string>Sora.ttf</string>
 		<string>SourceSans3.ttf</string>
 	</array>
 	<key>UIRequiredDeviceCapabilities</key>

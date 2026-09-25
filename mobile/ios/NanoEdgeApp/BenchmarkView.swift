@@ -112,15 +112,9 @@ public struct BenchmarkView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack(alignment: .bottom) {
-                        VStack(alignment: .leading, spacing: 26) {
-                            Text("TELEMETRY / 04")
-                                .font(StudioTheme.body(.caption2, weight: .bold))
-                                .tracking(1.6)
-                                .foregroundStyle(StudioTheme.ember)
-                            Text("Performance")
-                                .font(StudioTheme.heading(.largeTitle, weight: .bold))
-                                .tracking(-1.5)
-                        }
+                        Text("Performance")
+                            .font(StudioTheme.heading(.largeTitle, weight: .bold))
+                            .tracking(-1.5)
                         Spacer()
                         Button(action: scanDiscoveredModels) {
                             Image(systemName: "arrow.clockwise")
@@ -131,31 +125,19 @@ public struct BenchmarkView: View {
                     }
                     .padding(.bottom, 16)
 
-                    // 1. Hardware Vitals Header
                     hardwareHeaderCard
-                    
-                    // 2. Real-Time Memory Vitals
                     memoryVitalsCard
-                    
-                    // 3. Engine Switcher & Iteration Selector
                     benchmarkControlCard
-                    
-                    // 4. Live SwiftUI Performance Charts (if data available)
                     if !chartPoints.isEmpty {
                         performanceChartsCard
                     }
-                    
-                    // 5. Active Benchmark Results & Optimization A/B Comparison
                     if let res = benchmarkResult {
                         optimizationComparisonCard(res)
                         benchmarkMetricsCard(res)
                         kernelOptimizationLabCard(res)
                     }
                     
-                    // 6. Multi-Model Selector & Browser
                     modelSelectorCard
-                    
-                    // 7. Comparison Matrix
                     if !benchmarkHistory.isEmpty {
                         comparisonMatrixCard
                     }
@@ -180,53 +162,28 @@ public struct BenchmarkView: View {
     // MARK: - Subviews
     
     private var hardwareHeaderCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Image(systemName: "cpu.fill")
-                    .font(StudioTheme.heading(.title2))
-                    .foregroundStyle(StudioTheme.ember)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(deviceName)
-                        .font(StudioTheme.heading(.headline))
-                        .fontWeight(.bold)
-                    Text("CPU, GPU and memory diagnostics")
-                        .font(StudioTheme.body(.caption2))
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(hasUnifiedMemory ? Color.green : StudioTheme.ember)
-                        .frame(width: 8, height: 8)
-                    Text(hasUnifiedMemory ? "Unified RAM" : "Discrete")
-                        .font(StudioTheme.body(.caption2))
-                        .fontWeight(.semibold)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(StudioTheme.surfaceRaised)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+        HStack(alignment: .firstTextBaseline) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(deviceName)
+                    .font(StudioTheme.heading(.headline, weight: .semibold))
+                Text("CPU, GPU and memory diagnostics")
+                    .font(StudioTheme.body(.caption))
+                    .foregroundStyle(.secondary)
             }
+            Spacer()
+            Text(hasUnifiedMemory ? "Unified memory" : "Discrete memory")
+                .font(StudioTheme.body(.caption))
+                .foregroundStyle(.secondary)
         }
-        .padding()
-        .studioCard()
+        .padding(.vertical, 12)
+        .overlay(alignment: .bottom) { StudioTheme.border.frame(height: 1) }
     }
     
     private var memoryVitalsCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Memory")
-                    .font(StudioTheme.body(.subheadline))
-                    .fontWeight(.bold)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text("MAPPED")
-                    .font(StudioTheme.body(.caption2))
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(StudioTheme.surfaceRaised)
-                    .foregroundStyle(StudioTheme.titanium)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .font(StudioTheme.heading(.headline))
             }
             
             HStack(spacing: 16) {
@@ -254,8 +211,8 @@ public struct BenchmarkView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-        .padding()
-        .studioCard()
+        .padding(.vertical, 12)
+        .overlay(alignment: .bottom) { StudioTheme.border.frame(height: 1) }
     }
     
     private var benchmarkControlCard: some View {
@@ -279,21 +236,24 @@ public struct BenchmarkView: View {
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                 
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 0) {
                     ForEach(NanoEdgeExecutionEngine.allCases, id: \.self) { engine in
                         Button(action: { selectedEngine = engine }) {
                             HStack(spacing: 6) {
-                                Image(systemName: engine.iconName)
                                 Text(engine.label)
                                     .font(StudioTheme.body(.caption))
-                                    .fontWeight(.bold)
+                                    .fontWeight(selectedEngine == engine ? .semibold : .regular)
+                                Spacer()
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                            .background(selectedEngine == engine ? engine.themeColor : StudioTheme.surfaceRaised)
-                            .foregroundStyle(selectedEngine == engine ? .white : .primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                            .foregroundStyle(selectedEngine == engine ? StudioTheme.ember : Color.primary)
+                            .overlay(alignment: .bottom) {
+                                (selectedEngine == engine ? StudioTheme.ember : StudioTheme.border)
+                                    .frame(height: selectedEngine == engine ? 2 : 1)
+                            }
                         }
+                        .buttonStyle(.plain)
+                        .accessibilityAddTraits(selectedEngine == engine ? .isSelected : [])
                     }
                 }
                 
@@ -507,18 +467,9 @@ public struct BenchmarkView: View {
                 }
                 Spacer()
                 
-                // Speedup Pill
-                HStack(spacing: 4) {
-                    Image(systemName: "bolt.fill")
-                    Text(String(format: "%.1fx Faster", res.speedupFactor))
-                        .fontWeight(.heavy)
-                }
-                .font(StudioTheme.body(.caption))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(StudioTheme.ember)
-                .foregroundStyle(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                Text(String(format: "%.1fx faster", res.speedupFactor))
+                    .font(StudioTheme.body(.caption, weight: .semibold))
+                    .foregroundStyle(StudioTheme.ember)
             }
             
             Divider()
@@ -528,18 +479,10 @@ public struct BenchmarkView: View {
                 // WITHOUT OPTIMIZATIONS
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Image(systemName: "tortoise.fill")
-                            .foregroundStyle(StudioTheme.ember)
-                        Text("WITHOUT")
+                        Text("Baseline")
                             .font(StudioTheme.body(.caption2, weight: .bold))
                             .foregroundStyle(.secondary)
                         Spacer()
-                        Text("Baseline")
-                            .font(StudioTheme.body(.caption2, weight: .bold))
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 1)
-                            .background(Color(.systemGray4))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     
                     VStack(alignment: .leading, spacing: 2) {
@@ -582,29 +525,15 @@ public struct BenchmarkView: View {
                 }
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(StudioTheme.canvas)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(StudioTheme.ember.opacity(0.3), lineWidth: 1)
-                )
+                .overlay(alignment: .trailing) { StudioTheme.border.frame(width: 1) }
                 
                 // WITH OPTIMIZATIONS
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Image(systemName: "hare.fill")
-                            .foregroundStyle(.green)
-                        Text("WITH")
+                        Text("Optimized")
                             .font(StudioTheme.body(.caption2, weight: .bold))
-                            .foregroundStyle(.green)
+                            .foregroundStyle(.secondary)
                         Spacer()
-                        Text("NanoEdge")
-                            .font(StudioTheme.body(.caption2, weight: .bold))
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 1)
-                            .background(Color.green.opacity(0.2))
-                            .foregroundStyle(.green)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     
                     VStack(alignment: .leading, spacing: 2) {
@@ -650,12 +579,6 @@ public struct BenchmarkView: View {
                 }
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.green.opacity(0.06))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.green.opacity(0.6), lineWidth: 1.5)
-                )
             }
             
             // Visual Progress Comparison Meter
@@ -714,9 +637,7 @@ public struct BenchmarkView: View {
                     .frame(height: 18)
                 }
             }
-            .padding(10)
-            .background(StudioTheme.canvas)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .padding(.vertical, 10)
             
             // Optimization Summary Highlights
             VStack(alignment: .leading, spacing: 6) {
@@ -748,9 +669,7 @@ public struct BenchmarkView: View {
                         .font(StudioTheme.body(.caption2))
                 }
             }
-            .padding(10)
-            .background(StudioTheme.canvas)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .padding(.vertical, 10)
         }
         .padding()
         .studioCard()
@@ -1284,23 +1203,23 @@ public struct BenchmarkView: View {
                 }
             }
             
-            // Filter Pills
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+            HStack {
+                Text("Filter models")
+                    .font(StudioTheme.body(.caption))
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Menu {
                     ForEach(["All", "Qwen", "Llama", "Mistral", "Gemma", "0.5B", "1.5B", "3B", "7B", "Q4_0", "MQ4", "INT8"], id: \.self) { filter in
-                        Button(action: { selectedFilter = filter }) {
-                            Text(filter)
-                                .font(StudioTheme.body(.caption2))
-                                .fontWeight(.semibold)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 5)
-                                .background(selectedFilter == filter ? StudioTheme.ember : StudioTheme.surfaceRaised)
-                                .foregroundStyle(selectedFilter == filter ? .white : .primary)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                        }
+                        Button(filter) { selectedFilter = filter }
                     }
+                } label: {
+                    Label(selectedFilter, systemImage: "chevron.down")
+                        .font(StudioTheme.body(.caption, weight: .semibold))
+                        .foregroundStyle(.primary)
                 }
             }
+            .frame(minHeight: 44)
+            .overlay(alignment: .bottom) { StudioTheme.border.frame(height: 1) }
             
             // Model List
             if filteredModels.isEmpty {
@@ -1347,15 +1266,6 @@ public struct BenchmarkView: View {
         
         return Button(action: { loadModelItem(model) }) {
             HStack(spacing: 12) {
-                ZStack {
-                    Circle()
-                        .fill(isCurrent ? Color.green.opacity(0.15) : StudioTheme.ember.opacity(0.12))
-                        .frame(width: 36, height: 36)
-                    Image(systemName: isCurrent ? "bolt.fill" : "cube.fill")
-                        .font(StudioTheme.body(.caption))
-                        .foregroundStyle(isCurrent ? .green : StudioTheme.ember)
-                }
-                
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Text(model.name)
@@ -1364,13 +1274,9 @@ public struct BenchmarkView: View {
                             .foregroundStyle(.primary)
                             .lineLimit(1)
                         if isCurrent {
-                            Text("ACTIVE")
-                                .font(StudioTheme.body(.caption2, weight: .bold))
-                                .padding(.horizontal, 5)
-                                .padding(.vertical, 1)
-                                .background(Color.green)
-                                .foregroundStyle(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                            Text("Active")
+                                .font(StudioTheme.body(.caption2, weight: .semibold))
+                                .foregroundStyle(StudioTheme.phosphor)
                         }
                     }
                     
@@ -1390,33 +1296,13 @@ public struct BenchmarkView: View {
                 Spacer()
                 
                 Text(model.quantLabel)
-                    .font(StudioTheme.body(.caption2, weight: .bold))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(quantBadgeColor(model.quantLabel))
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .font(StudioTheme.body(.caption2, weight: .semibold))
+                    .foregroundStyle(.secondary)
             }
-            .padding(10)
-            .background(isCurrent ? Color.green.opacity(0.06) : StudioTheme.canvas)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(isCurrent ? Color.green.opacity(0.5) : Color.clear, lineWidth: 1.5)
-            )
+            .padding(.vertical, 10)
+            .overlay(alignment: .bottom) { StudioTheme.border.frame(height: 1) }
         }
         .buttonStyle(.plain)
-    }
-    
-    private func quantBadgeColor(_ quant: String) -> Color {
-        if quant.contains("MQ4") {
-            return StudioTheme.ember
-        } else if quant.contains("INT8") || quant.contains("Q8") {
-            return StudioTheme.ember
-        } else if quant.contains("Q4") {
-            return StudioTheme.ember
-        }
-        return .secondary
     }
     
     private var comparisonMatrixCard: some View {
