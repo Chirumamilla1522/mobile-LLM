@@ -209,7 +209,7 @@ public struct ChatView: View {
                     .frame(width: 7, height: 7)
                 
                 Text(selectedTier.shortLabel)
-                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                    .font(StudioTheme.body(.subheadline, weight: .semibold))
                     .foregroundStyle(.primary)
                 
                 StudioIcon(.chevronDown)
@@ -219,9 +219,9 @@ public struct ChatView: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
             .background(StudioTheme.surfaceRaised)
-            .clipShape(Capsule())
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay(
-                Capsule().stroke(StudioTheme.border, lineWidth: 0.8)
+                RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 0.8)
             )
         }
     }
@@ -236,7 +236,7 @@ public struct ChatView: View {
                     .foregroundStyle(StudioTheme.phosphor)
                 
                 Text(selectedEngine == .metalGPU ? "Metal GPU" : "NEON CPU")
-                    .font(.system(.caption, design: .default, weight: .semibold))
+                    .font(StudioTheme.body(.caption, weight: .semibold))
                     .foregroundStyle(.secondary)
             }
             
@@ -248,20 +248,20 @@ public struct ChatView: View {
                         .frame(width: 10, height: 10)
                         .foregroundStyle(StudioTheme.phosphor)
                     Text(String(format: "%.1f tok/s", currentTokPerSec))
-                        .font(.system(.caption2, design: .rounded, weight: .bold))
+                        .font(StudioTheme.body(.caption2, weight: .bold))
                         .foregroundStyle(StudioTheme.phosphor)
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
                 .background(StudioTheme.phosphor.opacity(0.14))
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             } else {
                 HStack(spacing: 4) {
                     StudioIcon(.cpu)
                         .frame(width: 10, height: 10)
                         .foregroundStyle(StudioTheme.titanium)
                     Text(String(format: "%.0f MB RAM", physicalFootprintMB > 0 ? physicalFootprintMB : selectedTier.memoryTierMB))
-                        .font(.system(.caption2, design: .default, weight: .bold))
+                        .font(StudioTheme.body(.caption2, weight: .bold))
                         .foregroundStyle(.secondary)
                 }
             }
@@ -275,17 +275,22 @@ public struct ChatView: View {
     
     private var emptyStateView: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("A place to think.")
-                .font(.title2.weight(.semibold))
+            Text("NOTEBOOK / 02")
+                .font(StudioTheme.body(.caption2, weight: .bold))
+                .tracking(1.6)
+                .foregroundStyle(StudioTheme.ember)
+                .padding(.bottom, 28)
+            Text("New conversation")
+                .font(StudioTheme.heading(.title2, weight: .semibold))
                 .foregroundStyle(.primary)
                 .padding(.bottom, 8)
-            Text("Ask your model a question, or start with an idea below.")
-                .font(.body)
+            Text("Prompts and responses stay on this device.")
+                .font(StudioTheme.body(.body))
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 38)
 
             Text("Try asking")
-                .font(.headline)
+                .font(StudioTheme.heading(.headline))
                 .padding(.bottom, 12)
             starterPrompt("Explain something", prompt: "Explain how on-device LLM inference works")
             Divider()
@@ -305,11 +310,11 @@ public struct ChatView: View {
         } label: {
             HStack(spacing: 12) {
                 Text(title)
-                    .font(.body)
+                    .font(StudioTheme.body(.body))
                     .foregroundStyle(.primary)
                 Spacer()
                 Image(systemName: "arrow.up.left")
-                    .font(.footnote)
+                    .font(StudioTheme.body(.footnote))
                     .foregroundStyle(.secondary)
             }
             .padding(.vertical, 17)
@@ -331,7 +336,7 @@ public struct ChatView: View {
                         .overlay(
                             Circle().stroke(StudioTheme.ember.opacity(0.3), lineWidth: 1)
                         )
-                    StudioIcon(.sparkles)
+                    StudioIcon(.cpu)
                         .frame(width: 14, height: 14)
                         .foregroundStyle(StudioTheme.ember)
                 }
@@ -346,10 +351,10 @@ public struct ChatView: View {
                         HStack(spacing: 6) {
                             StudioIcon(.wrench)
                                 .frame(width: 12, height: 12)
-                                .foregroundStyle(StudioTheme.amber)
+                                .foregroundStyle(StudioTheme.ember)
                             Text("Tool Executed: \(tool.toolName)")
-                                .font(.system(.caption, design: .rounded, weight: .semibold))
-                                .foregroundStyle(StudioTheme.amber)
+                                .font(StudioTheme.body(.caption, weight: .semibold))
+                                .foregroundStyle(StudioTheme.ember)
                             Spacer()
                             Text(String(format: "%.1f ms", tool.executionTimeMs))
                                 .font(.system(.caption2, design: .monospaced))
@@ -365,7 +370,7 @@ public struct ChatView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     .padding(10)
-                    .studioCard(cornerRadius: 12, borderColor: StudioTheme.amber.opacity(0.3))
+                    .studioCard()
                 }
                 
                 // RAG Source Citations
@@ -376,15 +381,15 @@ public struct ChatView: View {
                                 HStack(spacing: 4) {
                                     StudioIcon(.bookOpen)
                                         .frame(width: 10, height: 10)
-                                        .foregroundStyle(StudioTheme.purple)
+                                        .foregroundStyle(StudioTheme.ember)
                                     Text(cit)
-                                        .font(.system(.caption2, design: .default, weight: .bold))
+                                        .font(StudioTheme.body(.caption2, weight: .bold))
                                 }
                                 .padding(.horizontal, 9)
                                 .padding(.vertical, 4)
-                                .background(StudioTheme.purple.opacity(0.12))
-                                .foregroundStyle(StudioTheme.purple)
-                                .clipShape(Capsule())
+                                .background(StudioTheme.ember.opacity(0.12))
+                                .foregroundStyle(StudioTheme.ember)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                         }
                     }
@@ -392,7 +397,7 @@ public struct ChatView: View {
                 
                 if !msg.text.isEmpty {
                     Text(LocalizedStringKey(msg.text))
-                        .font(.subheadline)
+                        .font(StudioTheme.body(.subheadline))
                         .lineSpacing(3)
                         .padding(.horizontal, 14)
                         .padding(.vertical, 10)
@@ -402,9 +407,9 @@ public struct ChatView: View {
                             AnyShapeStyle(StudioTheme.surfaceRaised)
                         )
                         .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
                                 .stroke(msg.isUser ? Color.white.opacity(0.10) : StudioTheme.border, lineWidth: 1)
                         )
                 }
@@ -418,7 +423,7 @@ public struct ChatView: View {
                                     .frame(width: 10, height: 10)
                                     .foregroundStyle(StudioTheme.phosphor)
                                 Text(String(format: "%.1f tok/s • %@", msg.tokPerSec, msg.engineUsed))
-                                    .font(.system(.caption2, design: .rounded, weight: .bold))
+                                    .font(StudioTheme.body(.caption2, weight: .bold))
                                     .foregroundStyle(.secondary)
                             }
                         }
@@ -460,7 +465,7 @@ public struct ChatView: View {
                         }) {
                             StudioIcon(.volume2)
                                 .frame(width: 11, height: 11)
-                                .foregroundStyle(speechManager.isSpeaking ? StudioTheme.cobalt : .secondary)
+                                .foregroundStyle(speechManager.isSpeaking ? StudioTheme.ember : .secondary)
                                 .padding(6)
                                 .background(StudioTheme.surface)
                                 .clipShape(Circle())
@@ -497,14 +502,14 @@ public struct ChatView: View {
                 .frame(width: 14, height: 14)
                 .foregroundStyle(.red)
             Text("Listening... speak your prompt")
-                .font(.system(.caption, design: .rounded, weight: .semibold))
+                .font(StudioTheme.body(.caption, weight: .semibold))
                 .foregroundStyle(.red)
             Spacer()
             Button("Done") {
                 speechManager.stopRecording()
             }
-            .font(.system(.caption, design: .rounded, weight: .semibold))
-            .foregroundStyle(StudioTheme.cobalt)
+            .font(StudioTheme.body(.caption, weight: .semibold))
+            .foregroundStyle(StudioTheme.ember)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
@@ -546,7 +551,7 @@ public struct ChatView: View {
             HStack(alignment: .bottom, spacing: 8) {
                 TextField("Ask anything...", text: $inputPrompt, axis: .vertical)
                     .lineLimit(1...5)
-                    .font(.subheadline)
+                    .font(StudioTheme.body(.subheadline))
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                     .disabled(isGenerating)
@@ -562,9 +567,9 @@ public struct ChatView: View {
                 .bouncyPress()
             }
             .background(StudioTheme.surfaceInput)
-            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .stroke(StudioTheme.border, lineWidth: 1)
             )
             
@@ -577,7 +582,6 @@ public struct ChatView: View {
                         .padding(10)
                         .background(Color.red)
                         .clipShape(Circle())
-                        .shadow(color: Color.red.opacity(0.3), radius: 6, x: 0, y: 3)
                 }
                 .accessibilityLabel("Stop generating")
                 .bouncyPress()
@@ -588,9 +592,8 @@ public struct ChatView: View {
                         .frame(width: 15, height: 15)
                         .foregroundStyle(hasText ? .white : Color.secondary.opacity(0.4))
                         .padding(10)
-                        .background(hasText ? AnyShapeStyle(StudioTheme.emberGradient) : AnyShapeStyle(StudioTheme.surfaceRaised))
+                        .background(hasText ? StudioTheme.ember : StudioTheme.surfaceRaised)
                         .clipShape(Circle())
-                        .shadow(color: hasText ? StudioTheme.ember.opacity(0.3) : Color.clear, radius: 6, x: 0, y: 3)
                 }
                 .disabled(!hasText)
                 .accessibilityLabel("Send message")

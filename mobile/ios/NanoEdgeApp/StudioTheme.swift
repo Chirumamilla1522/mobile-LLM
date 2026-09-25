@@ -1,52 +1,46 @@
 import SwiftUI
 
 public enum StudioTheme {
-    // MARK: - Monolithic Velvet & Obsidian Surfaces
-    public static let canvas = Color(red: 0.04, green: 0.04, blue: 0.06)
-    public static let surface = Color(red: 0.08, green: 0.09, blue: 0.12)
-    public static let surfaceRaised = Color(red: 0.12, green: 0.13, blue: 0.17)
-    public static let surfaceInput = Color(red: 0.07, green: 0.08, blue: 0.11)
-    
-    // MARK: - Precision Borders
-    public static let border = Color.white.opacity(0.08)
-    public static let borderSubtle = Color.white.opacity(0.04)
-    public static let borderActive = Color.white.opacity(0.20)
-    
-    // MARK: - Semantic Human & Silicon Accents
-    public static let ember = Color(red: 0.96, green: 0.42, blue: 0.28)      // Warm human touch & drafting
-    public static let titanium = Color(red: 0.65, green: 0.69, blue: 0.76)   // Precision Apple Silicon
-    public static let phosphor = Color(red: 0.13, green: 0.77, blue: 0.49)   // Health & live speed (clean emerald)
-    public static let cobalt = Color(red: 0.31, green: 0.54, blue: 0.98)     // Deep logic, math & A18 Pro GPU
-    public static let amber = Color(red: 0.98, green: 0.66, blue: 0.18)
-    public static let purple = Color(red: 0.62, green: 0.45, blue: 0.95)     // Knowledge & vault
-    
-    // MARK: - Dynamic Gradients
-    public static let emberGradient = LinearGradient(
-        colors: [ember, Color(red: 1.0, green: 0.55, blue: 0.35)],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    public static let cobaltGradient = LinearGradient(
-        colors: [cobalt, Color(red: 0.45, green: 0.68, blue: 1.0)],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    public static let cardBackground = Color(red: 0.09, green: 0.10, blue: 0.13)
-    
-    // Typography Styles
-    public static func monoCaption(_ text: String) -> Text {
-        Text(text)
-            .font(.system(.caption, design: .rounded, weight: .semibold))
+    public static let canvas = Color(red: 0.067, green: 0.067, blue: 0.059)
+    public static let surface = Color(red: 0.105, green: 0.105, blue: 0.094)
+    public static let surfaceRaised = Color(red: 0.15, green: 0.15, blue: 0.133)
+    public static let surfaceInput = Color(red: 0.085, green: 0.085, blue: 0.075)
+    public static let border = Color.white.opacity(0.14)
+    public static let borderActive = Color.white.opacity(0.32)
+    public static let ember = Color(red: 0.96, green: 0.37, blue: 0.16)
+    public static let titanium = Color(red: 0.68, green: 0.67, blue: 0.63)
+    public static let phosphor = Color(red: 0.58, green: 0.73, blue: 0.53) // Status only
+
+    public static func heading(_ style: Font.TextStyle, weight: Font.Weight = .semibold) -> Font {
+        .custom("PlusJakartaSans-Regular", size: pointSize(for: style), relativeTo: style).weight(weight)
     }
+
+    public static func body(_ style: Font.TextStyle, weight: Font.Weight = .regular) -> Font {
+        .custom("SourceSans3-Roman", size: pointSize(for: style), relativeTo: style).weight(weight)
+    }
+
+    private static func pointSize(for style: Font.TextStyle) -> CGFloat {
+        switch style {
+        case .largeTitle: return 34
+        case .title: return 28
+        case .title2: return 22
+        case .title3: return 20
+        case .headline, .body: return 17
+        case .subheadline, .callout: return 16
+        case .footnote: return 14
+        case .caption: return 13
+        case .caption2: return 12
+        @unknown default: return 17
+        }
+    }
+
 }
 
 public enum StudioSymbol {
     case activity, arrowRight, arrowUp, arrowUpRight, audioWaveform, bookOpen
     case brain, braces, calculator, camera, check, chevronDown, code, copy, cpu
     case fileText, languages, layers, messageSquare, mic, play, plus, rotateCw
-    case scan, shieldCheck, sparkles, square, trash2, user, volume2, wand, wrench, x, zap
+    case scan, shieldCheck, square, trash2, user, volume2, wand, wrench, x, zap
 
     fileprivate var systemName: String {
         switch self {
@@ -75,12 +69,11 @@ public enum StudioSymbol {
         case .rotateCw: return "arrow.clockwise"
         case .scan: return "viewfinder"
         case .shieldCheck: return "checkmark.shield"
-        case .sparkles: return "sparkles"
         case .square: return "stop.fill"
         case .trash2: return "trash"
         case .user: return "person.crop.circle"
         case .volume2: return "speaker.wave.2"
-        case .wand: return "wand.and.sparkles"
+        case .wand: return "text.badge.checkmark"
         case .wrench: return "wrench.and.screwdriver"
         case .x: return "xmark"
         case .zap: return "bolt.fill"
@@ -106,33 +99,13 @@ public struct StudioIcon: View {
 // MARK: - View Modifiers & Styles
 
 public struct StudioCardModifier: ViewModifier {
-    var cornerRadius: CGFloat = 18
-    var borderColor: Color = StudioTheme.border
-    var isRaised: Bool = false
-    
     public func body(content: Content) -> some View {
         content
-            .background(isRaised ? StudioTheme.surfaceRaised : StudioTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            .background(StudioTheme.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(borderColor, lineWidth: 1)
-            )
-    }
-}
-
-public struct StudioPillModifier: ViewModifier {
-    var accentColor: Color = StudioTheme.phosphor
-    
-    public func body(content: Content) -> some View {
-        content
-            .padding(.horizontal, 9)
-            .padding(.vertical, 4)
-            .background(accentColor.opacity(0.12))
-            .foregroundStyle(accentColor)
-            .clipShape(Capsule())
-            .overlay(
-                Capsule().stroke(accentColor.opacity(0.25), lineWidth: 0.8)
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke(StudioTheme.border, lineWidth: 1)
             )
     }
 }
@@ -152,12 +125,8 @@ public struct BouncyButtonStyle: ButtonStyle {
 }
 
 public extension View {
-    func studioCard(cornerRadius: CGFloat = 18, borderColor: Color = StudioTheme.border, isRaised: Bool = false) -> some View {
-        modifier(StudioCardModifier(cornerRadius: cornerRadius, borderColor: borderColor, isRaised: isRaised))
-    }
-    
-    func studioPill(accent: Color = StudioTheme.phosphor) -> some View {
-        modifier(StudioPillModifier(accentColor: accent))
+    func studioCard() -> some View {
+        modifier(StudioCardModifier())
     }
     
     func bouncyPress() -> some View {

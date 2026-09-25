@@ -61,6 +61,7 @@ public struct ContentView: View {
             }
         }
         .tint(StudioTheme.ember)
+        .environment(\.font, StudioTheme.body(.body))
         .preferredColorScheme(.dark)
         .sheet(isPresented: $showGlobalVoiceOrb) {
             VoiceOrbView(activeModelName: $activeModelName)
@@ -78,12 +79,50 @@ public struct ContentView: View {
     }
 
     private var compactLayout: some View {
-        TabView(selection: $selectedTab) {
-            destination(0).tabItem { Label("Studio", systemImage: "slider.horizontal.3") }.tag(0)
-            destination(1).tabItem { Label("Notebook", systemImage: "square.and.pencil") }.tag(1)
-            destination(2).tabItem { Label("Instruments", systemImage: "wrench.and.screwdriver") }.tag(2)
-            destination(3).tabItem { Label("Telemetry", systemImage: "chart.xyaxis.line") }.tag(3)
+        VStack(spacing: 0) {
+            TabView(selection: $selectedTab) {
+                destination(0).tabItem { Label("Studio", systemImage: "square.grid.2x2") }.tag(0)
+                    .toolbar(.hidden, for: .tabBar)
+                destination(1).tabItem { Label("Notebook", systemImage: "square.and.pencil") }.tag(1)
+                    .toolbar(.hidden, for: .tabBar)
+                destination(2).tabItem { Label("Instruments", systemImage: "slider.horizontal.3") }.tag(2)
+                    .toolbar(.hidden, for: .tabBar)
+                destination(3).tabItem { Label("Telemetry", systemImage: "chart.xyaxis.line") }.tag(3)
+                    .toolbar(.hidden, for: .tabBar)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            HStack(spacing: 0) {
+                tabButton("Studio", symbol: "square.grid.2x2", tab: 0)
+                tabButton("Notebook", symbol: "square.and.pencil", tab: 1)
+                tabButton("Instruments", symbol: "slider.horizontal.3", tab: 2)
+                tabButton("Telemetry", symbol: "chart.xyaxis.line", tab: 3)
+            }
+            .background(StudioTheme.canvas)
+            .overlay(alignment: .top) { StudioTheme.border.frame(height: 1) }
         }
+        .background(StudioTheme.canvas.ignoresSafeArea())
+    }
+
+    private func tabButton(_ title: String, symbol: String, tab: Int) -> some View {
+        Button { selectedTab = tab } label: {
+            VStack(spacing: 5) {
+                Image(systemName: symbol)
+                    .font(.system(size: 19, weight: .regular))
+                Text(title)
+                    .font(StudioTheme.body(.caption2, weight: selectedTab == tab ? .semibold : .regular))
+            }
+            .foregroundStyle(selectedTab == tab ? StudioTheme.ember : StudioTheme.titanium)
+            .frame(maxWidth: .infinity, minHeight: 62)
+            .contentShape(Rectangle())
+            .overlay(alignment: .top) {
+                (selectedTab == tab ? StudioTheme.ember : Color.clear)
+                    .frame(height: 2)
+                    .padding(.horizontal, 16)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selectedTab == tab ? .isSelected : [])
     }
 
     private var regularLayout: some View {
@@ -98,8 +137,8 @@ public struct ContentView: View {
             .listStyle(.sidebar)
         } detail: {
             destination(selectedTab)
-                .frame(maxWidth: 900)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: 900, alignment: .leading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .background(StudioTheme.canvas)
         }
     }

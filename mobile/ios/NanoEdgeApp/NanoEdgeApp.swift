@@ -14,6 +14,18 @@ struct NanoEdgeApp: App {
 
     init() {
         #if canImport(UIKit)
+        let navigation = UINavigationBarAppearance()
+        navigation.configureWithOpaqueBackground()
+        navigation.backgroundColor = UIColor(StudioTheme.canvas)
+        navigation.shadowColor = UIColor(StudioTheme.border)
+        if let heading = UIFont(name: "PlusJakartaSans-Regular", size: 32),
+           let label = UIFont(name: "PlusJakartaSans-Regular", size: 17) {
+            navigation.largeTitleTextAttributes = [.font: heading, .foregroundColor: UIColor.white]
+            navigation.titleTextAttributes = [.font: label, .foregroundColor: UIColor.white]
+        }
+        UINavigationBar.appearance().standardAppearance = navigation
+        UINavigationBar.appearance().scrollEdgeAppearance = navigation
+
         NotificationCenter.default.addObserver(
             forName: UIApplication.didReceiveMemoryWarningNotification,
             object: nil,

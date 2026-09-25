@@ -46,14 +46,7 @@ extension NanoEdgeExecutionEngine: CaseIterable {
     }
     
     public var themeColor: Color {
-        switch self {
-        case .metalGPUTiled: return .purple
-        case .metalGPUBaseline: return .indigo
-        case .appleNeuralEngine: return .mint
-        case .neonCPUMultiCore: return .orange
-        case .neonCPUSingleCore: return .brown
-        @unknown default: return .blue
-        }
+        StudioTheme.ember
     }
 }
 
@@ -117,7 +110,27 @@ public struct BenchmarkView: View {
     public var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(alignment: .bottom) {
+                        VStack(alignment: .leading, spacing: 26) {
+                            Text("TELEMETRY / 04")
+                                .font(StudioTheme.body(.caption2, weight: .bold))
+                                .tracking(1.6)
+                                .foregroundStyle(StudioTheme.ember)
+                            Text("Performance")
+                                .font(StudioTheme.heading(.largeTitle, weight: .bold))
+                                .tracking(-1.5)
+                        }
+                        Spacer()
+                        Button(action: scanDiscoveredModels) {
+                            Image(systemName: "arrow.clockwise")
+                                .font(StudioTheme.body(.body))
+                                .frame(width: 44, height: 44)
+                        }
+                        .accessibilityLabel("Refresh models")
+                    }
+                    .padding(.bottom, 16)
+
                     // 1. Hardware Vitals Header
                     hardwareHeaderCard
                     
@@ -147,18 +160,14 @@ public struct BenchmarkView: View {
                         comparisonMatrixCard
                     }
                 }
-                .padding()
+                .frame(maxWidth: 800, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.top, 32)
+                .padding(.bottom, 40)
             }
-            .navigationTitle("A18 Pro Benchmarks")
-            .navigationBarTitleDisplayMode(.large)
+            .toolbar(.hidden, for: .navigationBar)
             .background(StudioTheme.canvas)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: scanDiscoveredModels) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                }
-            }
             .fileImporter(
                 isPresented: $showFilePicker,
                 allowedContentTypes: [.data, UTType(filenameExtension: "mllm") ?? .data]
@@ -174,101 +183,99 @@ public struct BenchmarkView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Image(systemName: "cpu.fill")
-                    .font(.title2)
-                    .foregroundStyle(.blue)
+                    .font(StudioTheme.heading(.title2))
+                    .foregroundStyle(StudioTheme.ember)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(deviceName)
-                        .font(.headline)
+                        .font(StudioTheme.heading(.headline))
                         .fontWeight(.bold)
-                    Text("Apple Silicon • 6-Core GPU + SME")
-                        .font(.caption2)
+                    Text("CPU, GPU and memory diagnostics")
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
                 HStack(spacing: 4) {
                     Circle()
-                        .fill(hasUnifiedMemory ? Color.green : Color.orange)
+                        .fill(hasUnifiedMemory ? Color.green : StudioTheme.ember)
                         .frame(width: 8, height: 8)
                     Text(hasUnifiedMemory ? "Unified RAM" : "Discrete")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .fontWeight(.semibold)
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(Color(.systemGray6))
-                .clipShape(Capsule())
+                .background(StudioTheme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     private var memoryVitalsCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Process Memory (Zero-Decompression)")
-                    .font(.subheadline)
+                Text("Memory")
+                    .font(StudioTheme.body(.subheadline))
                     .fontWeight(.bold)
                     .foregroundStyle(.secondary)
                 Spacer()
-                Text("mmap Zero-Copy")
-                    .font(.caption2)
+                Text("MAPPED")
+                    .font(StudioTheme.body(.caption2))
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
-                    .background(Color.green.opacity(0.15))
-                    .foregroundStyle(.green)
-                    .clipShape(Capsule())
+                    .background(StudioTheme.surfaceRaised)
+                    .foregroundStyle(StudioTheme.titanium)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             
             HStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Phys Footprint (Jetsam)")
-                        .font(.caption2)
+                    Text("Process footprint")
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                     Text(String(format: "%.1f MB", physicalFootprintMB))
-                        .font(.title3)
+                        .font(StudioTheme.heading(.title3))
                         .fontWeight(.bold)
-                        .foregroundStyle(physicalFootprintMB < 500 ? .green : .primary)
+                        .foregroundStyle(.primary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Divider()
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Resident RAM (RSS)")
-                        .font(.caption2)
+                    Text("Resident memory")
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                     Text(String(format: "%.1f MB", residentRAMMB))
-                        .font(.title3)
+                        .font(StudioTheme.heading(.title3))
                         .fontWeight(.bold)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     private var benchmarkControlCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Benchmark Configuration")
-                    .font(.subheadline)
+                Text("Benchmark setup")
+                    .font(StudioTheme.body(.subheadline))
                     .fontWeight(.bold)
                     .foregroundStyle(.secondary)
                 Spacer()
                 Text("Active: \(activeModelName)")
-                    .font(.caption2)
+                    .font(StudioTheme.body(.caption2))
                     .fontWeight(.semibold)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(StudioTheme.ember)
             }
             
             // 4-Way Engine Grid Selector
             VStack(alignment: .leading, spacing: 6) {
-                Text("Execution Engine")
-                    .font(.caption2)
+                Text("Compute path")
+                    .font(StudioTheme.body(.caption2))
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                 
@@ -278,12 +285,12 @@ public struct BenchmarkView: View {
                             HStack(spacing: 6) {
                                 Image(systemName: engine.iconName)
                                 Text(engine.label)
-                                    .font(.caption)
+                                    .font(StudioTheme.body(.caption))
                                     .fontWeight(.bold)
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 8)
-                            .background(selectedEngine == engine ? engine.themeColor : Color(.systemGray5))
+                            .background(selectedEngine == engine ? engine.themeColor : StudioTheme.surfaceRaised)
                             .foregroundStyle(selectedEngine == engine ? .white : .primary)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
@@ -291,7 +298,7 @@ public struct BenchmarkView: View {
                 }
                 
                 Text(selectedEngine.fullDescription)
-                    .font(.caption2)
+                    .font(StudioTheme.body(.caption2))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
@@ -299,7 +306,7 @@ public struct BenchmarkView: View {
             // Iterations Picker
             HStack {
                 Text("Iterations")
-                    .font(.caption2)
+                    .font(StudioTheme.body(.caption2))
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -325,19 +332,18 @@ public struct BenchmarkView: View {
                         Text("Run Benchmark (\(benchmarkIterations) it • \(selectedEngine.label))")
                     }
                 }
-                .font(.subheadline)
+                .font(StudioTheme.body(.subheadline))
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 11)
                 .background(isModelLoaded ? selectedEngine.themeColor : Color.gray)
                 .foregroundStyle(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             .disabled(!isModelLoaded || isBenchmarking)
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     // MARK: - SwiftUI Charts Card
@@ -347,18 +353,18 @@ public struct BenchmarkView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Live Hardware Performance Curves")
-                        .font(.subheadline)
+                        .font(StudioTheme.body(.subheadline))
                         .fontWeight(.bold)
                         .foregroundStyle(.secondary)
                     Text("SwiftUI Charts • Step Latency & Token Speed")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
                 if let res = benchmarkResult {
                     Text(String(format: "P50: %.0f µs", res.medianLatencyUs))
-                        .font(.system(.caption, design: .rounded, weight: .semibold))
-                        .foregroundStyle(.purple)
+                        .font(StudioTheme.body(.caption, weight: .semibold))
+                        .foregroundStyle(StudioTheme.ember)
                 }
             }
             
@@ -366,7 +372,7 @@ public struct BenchmarkView: View {
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
                     Text("Step Latency Distribution (µs)")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                     Spacer()
@@ -374,13 +380,13 @@ public struct BenchmarkView: View {
                         HStack(spacing: 3) {
                             Circle().fill(selectedEngine.themeColor).frame(width: 6, height: 6)
                             Text("With Opt")
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                                 .foregroundStyle(selectedEngine.themeColor)
                         }
                         HStack(spacing: 3) {
-                            Rectangle().fill(Color.orange).frame(width: 8, height: 2)
+                            Rectangle().fill(StudioTheme.ember).frame(width: 8, height: 2)
                             Text("Without Opt")
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -392,7 +398,7 @@ public struct BenchmarkView: View {
                         x: .value("Iteration", pt.step),
                         y: .value("Baseline Latency (µs)", pt.baselineLatencyUs)
                     )
-                    .foregroundStyle(Color.orange.opacity(0.8))
+                    .foregroundStyle(StudioTheme.titanium)
                     .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
                     .interpolationMethod(.monotone)
                     
@@ -401,7 +407,7 @@ public struct BenchmarkView: View {
                         x: .value("Iteration", pt.step),
                         y: .value("Latency (µs)", pt.latencyUs)
                     )
-                    .foregroundStyle(selectedEngine.themeColor.gradient)
+                    .foregroundStyle(selectedEngine.themeColor)
                     .interpolationMethod(.monotone)
                     
                     AreaMark(
@@ -409,9 +415,7 @@ public struct BenchmarkView: View {
                         y: .value("Latency (µs)", pt.latencyUs)
                     )
                     .foregroundStyle(
-                        selectedEngine.themeColor
-                            .opacity(0.12)
-                            .gradient
+                        selectedEngine.themeColor.opacity(0.08)
                     )
                     .interpolationMethod(.monotone)
                     
@@ -421,7 +425,7 @@ public struct BenchmarkView: View {
                             .foregroundStyle(.green)
                             .annotation(position: .top, alignment: .leading) {
                                 Text("P50 Median")
-                                    .font(.system(.caption2, design: .default, weight: .bold))
+                                    .font(StudioTheme.body(.caption2, weight: .bold))
                                     .foregroundStyle(.green)
                             }
                     }
@@ -441,13 +445,13 @@ public struct BenchmarkView: View {
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
                     Text("Token Decode Throughput (tok/s)")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                     Spacer()
                     if let res = benchmarkResult {
                         Text(String(format: "%.1f tok/s (vs %.1f base)", res.optimizedTokensPerSec, res.baselineTokensPerSec))
-                            .font(.system(.caption2, design: .default, weight: .bold))
+                            .font(StudioTheme.body(.caption2, weight: .bold))
                             .foregroundStyle(.green)
                     }
                 }
@@ -467,7 +471,7 @@ public struct BenchmarkView: View {
                         x: .value("Iteration", pt.step),
                         y: .value("Speed (tok/s)", pt.tokPerSec)
                     )
-                    .foregroundStyle(Color.green.gradient)
+                    .foregroundStyle(StudioTheme.ember)
                     .interpolationMethod(.monotone)
                 }
                 .frame(height: 110)
@@ -480,8 +484,7 @@ public struct BenchmarkView: View {
             }
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     // MARK: - Optimization Comparison Card (With vs. Without)
@@ -492,14 +495,14 @@ public struct BenchmarkView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Image(systemName: "gauge.with.dots.needle.bottom.50percent")
-                            .font(.headline)
+                            .font(StudioTheme.heading(.headline))
                             .foregroundStyle(.green)
                         Text("Speed With vs. Without Optimizations")
-                            .font(.headline)
+                            .font(StudioTheme.heading(.headline))
                             .fontWeight(.bold)
                     }
                     Text("Apple A18 Pro Silicon • Direct A/B Comparison")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -510,12 +513,12 @@ public struct BenchmarkView: View {
                     Text(String(format: "%.1fx Faster", res.speedupFactor))
                         .fontWeight(.heavy)
                 }
-                .font(.caption)
+                .font(StudioTheme.body(.caption))
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
-                .background(Color.green.gradient)
+                .background(StudioTheme.ember)
                 .foregroundStyle(.white)
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             
             Divider()
@@ -526,28 +529,28 @@ public struct BenchmarkView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Image(systemName: "tortoise.fill")
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(StudioTheme.ember)
                         Text("WITHOUT")
-                            .font(.system(.caption2, design: .default, weight: .bold))
+                            .font(StudioTheme.body(.caption2, weight: .bold))
                             .foregroundStyle(.secondary)
                         Spacer()
                         Text("Baseline")
-                            .font(.system(.caption2, design: .default, weight: .bold))
+                            .font(StudioTheme.body(.caption2, weight: .bold))
                             .padding(.horizontal, 5)
                             .padding(.vertical, 1)
                             .background(Color(.systemGray4))
-                            .clipShape(Capsule())
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     
                     VStack(alignment: .leading, spacing: 2) {
                         Text(String(format: "%.0f µs", res.baselineLatencyUs))
-                            .font(.title2)
+                            .font(StudioTheme.heading(.title2))
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
                         Text(String(format: "%.1f tok/s", res.baselineTokensPerSec))
-                            .font(.subheadline)
+                            .font(StudioTheme.body(.subheadline))
                             .fontWeight(.semibold)
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(StudioTheme.ember)
                     }
                     
                     Divider()
@@ -555,35 +558,35 @@ public struct BenchmarkView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 4) {
                             Text("DRAM:")
-                                .font(.caption2)
+                                .font(StudioTheme.body(.caption2))
                                 .foregroundStyle(.secondary)
                             Text(String(format: "%.1f MB/tok", res.activationMemoryTrafficMB))
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                         }
                         HStack(spacing: 4) {
                             Text("ALU:")
-                                .font(.caption2)
+                                .font(StudioTheme.body(.caption2))
                                 .foregroundStyle(.secondary)
                             Text("32 mults/blk")
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                         }
                         HStack(spacing: 4) {
                             Text("Config:")
-                                .font(.caption2)
+                                .font(StudioTheme.body(.caption2))
                                 .foregroundStyle(.secondary)
                             Text(res.baselineName ?? "Baseline")
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                                 .lineLimit(1)
                         }
                     }
                 }
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .background(StudioTheme.canvas)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(StudioTheme.ember.opacity(0.3), lineWidth: 1)
                 )
                 
                 // WITH OPTIMIZATIONS
@@ -592,25 +595,25 @@ public struct BenchmarkView: View {
                         Image(systemName: "hare.fill")
                             .foregroundStyle(.green)
                         Text("WITH")
-                            .font(.system(.caption2, design: .default, weight: .bold))
+                            .font(StudioTheme.body(.caption2, weight: .bold))
                             .foregroundStyle(.green)
                         Spacer()
                         Text("NanoEdge")
-                            .font(.system(.caption2, design: .default, weight: .bold))
+                            .font(StudioTheme.body(.caption2, weight: .bold))
                             .padding(.horizontal, 5)
                             .padding(.vertical, 1)
                             .background(Color.green.opacity(0.2))
                             .foregroundStyle(.green)
-                            .clipShape(Capsule())
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     
                     VStack(alignment: .leading, spacing: 2) {
                         Text(String(format: "%.0f µs", res.optimizedLatencyUs))
-                            .font(.title2)
+                            .font(StudioTheme.heading(.title2))
                             .fontWeight(.bold)
                             .foregroundStyle(.green)
                         Text(String(format: "%.1f tok/s", res.optimizedTokensPerSec))
-                            .font(.subheadline)
+                            .font(StudioTheme.body(.subheadline))
                             .fontWeight(.semibold)
                             .foregroundStyle(.green)
                     }
@@ -620,26 +623,26 @@ public struct BenchmarkView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 4) {
                             Text("DRAM:")
-                                .font(.caption2)
+                                .font(StudioTheme.body(.caption2))
                                 .foregroundStyle(.secondary)
                             Text(String(format: "%.1f MB (-50%%)", max(0.1, res.activationMemoryTrafficMB - res.memoryTrafficSavedMB)))
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                                 .foregroundStyle(.green)
                         }
                         HStack(spacing: 4) {
                             Text("ALU:")
-                                .font(.caption2)
+                                .font(StudioTheme.body(.caption2))
                                 .foregroundStyle(.secondary)
                             Text("1 mult/blk (31x)")
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                                 .foregroundStyle(.green)
                         }
                         HStack(spacing: 4) {
                             Text("Config:")
-                                .font(.caption2)
+                                .font(StudioTheme.body(.caption2))
                                 .foregroundStyle(.secondary)
                             Text(res.optimizedName ?? "Optimized")
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                                 .foregroundStyle(.green)
                                 .lineLimit(1)
                         }
@@ -648,9 +651,9 @@ public struct BenchmarkView: View {
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color.green.opacity(0.06))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 8)
                         .stroke(Color.green.opacity(0.6), lineWidth: 1.5)
                 )
             }
@@ -659,12 +662,12 @@ public struct BenchmarkView: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Throughput Comparison (Tokens / Sec)")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .fontWeight(.bold)
                         .foregroundStyle(.secondary)
                     Spacer()
                     Text(String(format: "+%.1f%% Speedup", max(0.0, (res.speedupFactor - 1.0) * 100.0)))
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .fontWeight(.bold)
                         .foregroundStyle(.green)
                 }
@@ -674,15 +677,15 @@ public struct BenchmarkView: View {
                     GeometryReader { geo in
                         ZStack(alignment: .leading) {
                             RoundedRectangle(cornerRadius: 4)
-                                .fill(Color(.systemGray5))
+                                .fill(StudioTheme.surfaceRaised)
                             let maxTok = max(res.optimizedTokensPerSec, res.baselineTokensPerSec, 1.0)
                             let baseRatio = min(1.0, res.baselineTokensPerSec / maxTok)
                             RoundedRectangle(cornerRadius: 4)
-                                .fill(Color.orange.opacity(0.85))
+                                .fill(StudioTheme.ember.opacity(0.85))
                                 .frame(width: max(20, geo.size.width * CGFloat(baseRatio)))
                             HStack {
                                 Text(String(format: "Without Opt: %.1f tok/s", res.baselineTokensPerSec))
-                                    .font(.system(.caption2, design: .default, weight: .bold))
+                                    .font(StudioTheme.body(.caption2, weight: .bold))
                                     .foregroundStyle(.white)
                                     .padding(.leading, 6)
                                 Spacer()
@@ -695,13 +698,13 @@ public struct BenchmarkView: View {
                     GeometryReader { geo in
                         ZStack(alignment: .leading) {
                             RoundedRectangle(cornerRadius: 4)
-                                .fill(Color(.systemGray5))
+                                .fill(StudioTheme.surfaceRaised)
                             RoundedRectangle(cornerRadius: 4)
-                                .fill(Color.green.gradient)
+                                .fill(StudioTheme.ember)
                                 .frame(width: geo.size.width)
                             HStack {
                                 Text(String(format: "With Opt: %.1f tok/s (%.1fx Faster)", res.optimizedTokensPerSec, res.speedupFactor))
-                                    .font(.system(.caption2, design: .default, weight: .bold))
+                                    .font(StudioTheme.body(.caption2, weight: .bold))
                                     .foregroundStyle(.white)
                                     .padding(.leading, 6)
                                 Spacer()
@@ -712,46 +715,45 @@ public struct BenchmarkView: View {
                 }
             }
             .padding(10)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .background(StudioTheme.canvas)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             
             // Optimization Summary Highlights
             VStack(alignment: .leading, spacing: 6) {
                 Text("Applied Architecture Gains")
-                    .font(.caption2)
+                    .font(StudioTheme.body(.caption2))
                     .fontWeight(.bold)
                     .foregroundStyle(.secondary)
                 
                 HStack(spacing: 6) {
                     Image(systemName: "bolt.badge.clock.fill")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.green)
                     Text(String(format: "Latency Cut by %.1f%% (from %.0f µs down to %.0f µs)", res.latencyReductionPct, res.baselineLatencyUs, res.optimizedLatencyUs))
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .fontWeight(.semibold)
                 }
                 HStack(spacing: 6) {
                     Image(systemName: "cpu.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.purple)
+                        .font(StudioTheme.body(.caption2))
+                        .foregroundStyle(StudioTheme.ember)
                     Text("Scale Factoring: 31 floating-point multiplications eliminated per block")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                 }
                 HStack(spacing: 6) {
                     Image(systemName: "memorychip.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.blue)
+                        .font(StudioTheme.body(.caption2))
+                        .foregroundStyle(StudioTheme.ember)
                     Text("2-Row Tiling: 50% activation DRAM reads eliminated via register reuse")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                 }
             }
             .padding(10)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .background(StudioTheme.canvas)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     // MARK: - 3-Way Silicon Shootout Card (GPU vs CPU vs ANE)
@@ -762,25 +764,25 @@ public struct BenchmarkView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Image(systemName: "triangle.fill")
-                            .font(.headline)
-                            .foregroundStyle(.purple)
+                            .font(StudioTheme.heading(.headline))
+                            .foregroundStyle(StudioTheme.ember)
                         Text("3-Way Apple Silicon Shootout")
-                            .font(.headline)
+                            .font(StudioTheme.heading(.headline))
                             .fontWeight(.bold)
                     }
                     Text("Apple A18 Pro (3nm N3E) • Metal GPU vs ARM CPU vs Neural Engine")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Text("A18 Pro")
-                    .font(.caption2)
+                    .font(StudioTheme.body(.caption2))
                     .fontWeight(.bold)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Color.purple.opacity(0.15))
-                    .foregroundStyle(.purple)
-                    .clipShape(Capsule())
+                    .background(StudioTheme.ember.opacity(0.15))
+                    .foregroundStyle(StudioTheme.ember)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             
             Divider()
@@ -791,101 +793,100 @@ public struct BenchmarkView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
                         Image(systemName: "bolt.fill")
-                            .font(.caption2)
-                            .foregroundStyle(.purple)
+                            .font(StudioTheme.body(.caption2))
+                            .foregroundStyle(StudioTheme.ember)
                         Text("Metal GPU")
-                            .font(.system(.caption2, design: .default, weight: .bold))
-                            .foregroundStyle(.purple)
+                            .font(StudioTheme.body(.caption2, weight: .bold))
+                            .foregroundStyle(StudioTheme.ember)
                     }
                     Text(String(format: "%.1f tok/s", max(res.optimizedTokensPerSec, 45.0)))
-                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        .font(StudioTheme.body(.subheadline, weight: .semibold))
                         .foregroundStyle(.primary)
                     Text("Raw Speed Leader")
-                        .font(.system(.caption2, design: .default, weight: .bold))
+                        .font(StudioTheme.body(.caption2, weight: .bold))
                         .foregroundStyle(.secondary)
                     Divider()
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Power: 3.85 W")
-                            .font(.caption2)
+                            .font(StudioTheme.body(.caption2))
                         Text("B/W: 60 GB/s")
-                            .font(.caption2)
+                            .font(StudioTheme.body(.caption2))
                     }
                     .foregroundStyle(.secondary)
                 }
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.purple.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(StudioTheme.ember.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 
                 // Apple Neural Engine (ANE)
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
                         Image(systemName: "brain.head.profile")
-                            .font(.caption2)
-                            .foregroundStyle(.mint)
+                            .font(StudioTheme.body(.caption2))
+                            .foregroundStyle(StudioTheme.ember)
                         Text("ANE NPU")
-                            .font(.system(.caption2, design: .default, weight: .bold))
-                            .foregroundStyle(.mint)
+                            .font(StudioTheme.body(.caption2, weight: .bold))
+                            .foregroundStyle(StudioTheme.ember)
                     }
                     Text(String(format: "%.1f tok/s", max(res.optimizedTokensPerSec * 0.92, 42.0)))
-                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        .font(StudioTheme.body(.subheadline, weight: .semibold))
                         .foregroundStyle(.primary)
                     Text("2.85x Efficiency")
-                        .font(.system(.caption2, design: .default, weight: .bold))
-                        .foregroundStyle(.mint)
+                        .font(StudioTheme.body(.caption2, weight: .bold))
+                        .foregroundStyle(StudioTheme.ember)
                     Divider()
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Power: 1.35 W")
-                            .font(.system(.caption2, design: .default, weight: .bold))
-                            .foregroundStyle(.mint)
+                            .font(StudioTheme.body(.caption2, weight: .bold))
+                            .foregroundStyle(StudioTheme.ember)
                         Text("TOPS: 35 TOPS")
-                            .font(.caption2)
+                            .font(StudioTheme.body(.caption2))
                     }
                     .foregroundStyle(.secondary)
                 }
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.mint.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(StudioTheme.ember.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.mint.opacity(0.5), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(StudioTheme.ember.opacity(0.5), lineWidth: 1)
                 )
                 
                 // ARM NEON CPU
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
                         Image(systemName: "cpu.fill")
-                            .font(.caption2)
-                            .foregroundStyle(.orange)
+                            .font(StudioTheme.body(.caption2))
+                            .foregroundStyle(StudioTheme.ember)
                         Text("6-Core CPU")
-                            .font(.system(.caption2, design: .default, weight: .bold))
-                            .foregroundStyle(.orange)
+                            .font(StudioTheme.body(.caption2, weight: .bold))
+                            .foregroundStyle(StudioTheme.ember)
                     }
                     Text(String(format: "%.1f tok/s", max(res.baselineTokensPerSec * 1.2, 28.0)))
-                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        .font(StudioTheme.body(.subheadline, weight: .semibold))
                         .foregroundStyle(.primary)
                     Text("Zero Setup Jitter")
-                        .font(.system(.caption2, design: .default, weight: .bold))
+                        .font(StudioTheme.body(.caption2, weight: .bold))
                         .foregroundStyle(.secondary)
                     Divider()
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Power: 3.60 W")
-                            .font(.caption2)
+                            .font(StudioTheme.body(.caption2))
                         Text("Cores: 2P + 4E")
-                            .font(.caption2)
+                            .font(StudioTheme.body(.caption2))
                     }
                     .foregroundStyle(.secondary)
                 }
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.orange.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(StudioTheme.ember.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     // MARK: - Silicon Energy & Thermal Profiler Card
@@ -896,14 +897,14 @@ public struct BenchmarkView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Image(systemName: "battery.100.bolt")
-                            .font(.headline)
+                            .font(StudioTheme.heading(.headline))
                             .foregroundStyle(.green)
                         Text("Silicon Energy & Thermal Profiler")
-                            .font(.headline)
+                            .font(StudioTheme.heading(.headline))
                             .fontWeight(.bold)
                     }
                     Text("Hardware Energy Telemetry • Apple Silicon Power Model")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -914,13 +915,13 @@ public struct BenchmarkView: View {
                         .fill(res.thermalStateLevel == 0 ? Color.green : (res.thermalStateLevel == 1 ? Color.yellow : Color.red))
                         .frame(width: 6, height: 6)
                     Text(res.thermalStateLevel == 0 ? "Cool" : "Warm")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .fontWeight(.bold)
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(Color(.systemGray6))
-                .clipShape(Capsule())
+                .background(StudioTheme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             
             Divider()
@@ -930,95 +931,94 @@ public struct BenchmarkView: View {
                 // Active Power
                 VStack(alignment: .leading, spacing: 2) {
                     Text("ACTIVE POWER DRAW")
-                        .font(.system(.caption2, design: .default, weight: .bold))
+                        .font(StudioTheme.body(.caption2, weight: .bold))
                         .foregroundStyle(.secondary)
                     HStack(alignment: .firstTextBaseline, spacing: 2) {
                         Text(String(format: "%.2f", res.activeWatts > 0 ? res.activeWatts : 3.85))
-                            .font(.title2)
+                            .font(StudioTheme.heading(.title2))
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
                         Text("Watts")
-                            .font(.caption)
+                            .font(StudioTheme.body(.caption))
                             .foregroundStyle(.secondary)
                     }
                     Text("Peak SoC dissipation")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(StudioTheme.canvas)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 
                 // Energy Per Token
                 VStack(alignment: .leading, spacing: 2) {
                     Text("ENERGY / TOKEN")
-                        .font(.system(.caption2, design: .default, weight: .bold))
+                        .font(StudioTheme.body(.caption2, weight: .bold))
                         .foregroundStyle(.secondary)
                     HStack(alignment: .firstTextBaseline, spacing: 2) {
                         Text(String(format: "%.1f", res.energyPerTokenMilliJoules > 0 ? res.energyPerTokenMilliJoules : 42.5))
-                            .font(.title2)
+                            .font(StudioTheme.heading(.title2))
                             .fontWeight(.bold)
                             .foregroundStyle(.green)
                         Text("mJ / tok")
-                            .font(.caption)
+                            .font(StudioTheme.body(.caption))
                             .foregroundStyle(.green)
                     }
                     Text("Per-token battery budget")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(StudioTheme.canvas)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 
                 // Continuous Battery Life
                 VStack(alignment: .leading, spacing: 2) {
                     Text("CONTINUOUS RUNTIME")
-                        .font(.system(.caption2, design: .default, weight: .bold))
+                        .font(StudioTheme.body(.caption2, weight: .bold))
                         .foregroundStyle(.secondary)
                     HStack(alignment: .firstTextBaseline, spacing: 2) {
                         Text(String(format: "%.1f", res.batteryLifeRemainingHours > 0 ? res.batteryLifeRemainingHours : 4.2))
-                            .font(.title2)
+                            .font(StudioTheme.heading(.title2))
                             .fontWeight(.bold)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(StudioTheme.ember)
                         Text("Hours")
-                            .font(.caption)
-                            .foregroundStyle(.blue)
+                            .font(StudioTheme.body(.caption))
+                            .foregroundStyle(StudioTheme.ember)
                     }
                     Text("13.79 Wh Battery (3582 mAh)")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(StudioTheme.canvas)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 
                 // Thermal Status
                 VStack(alignment: .leading, spacing: 2) {
                     Text("THERMAL HEADROOM")
-                        .font(.system(.caption2, design: .default, weight: .bold))
+                        .font(StudioTheme.body(.caption2, weight: .bold))
                         .foregroundStyle(.secondary)
                     Text(res.thermalStateName)
-                        .font(.caption)
+                        .font(StudioTheme.body(.caption))
                         .fontWeight(.bold)
-                        .foregroundStyle(res.thermalStateLevel == 0 ? .green : .orange)
+                        .foregroundStyle(res.thermalStateLevel == 0 ? .green : StudioTheme.ember)
                         .lineLimit(1)
                     Text("Zero thermal throttling")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(StudioTheme.canvas)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     // MARK: - Metrics Grid
@@ -1028,10 +1028,10 @@ public struct BenchmarkView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(res.tensorName)
-                        .font(.caption)
+                        .font(StudioTheme.body(.caption))
                         .fontWeight(.bold)
                     Text("\(res.engineName) • \(res.quantTypeName) • [\(res.rows)x\(res.cols)] (\(String(format: "%.1f MB", res.weightSizeMB)))")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -1042,13 +1042,13 @@ public struct BenchmarkView: View {
                         Image(systemName: copiedReport ? "checkmark" : "doc.on.doc")
                         Text(copiedReport ? "Copied" : "Export")
                     }
-                    .font(.caption2)
+                    .font(StudioTheme.body(.caption2))
                     .fontWeight(.semibold)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(copiedReport ? Color.green.opacity(0.15) : Color(.systemGray5))
+                    .background(copiedReport ? Color.green.opacity(0.15) : StudioTheme.surfaceRaised)
                     .foregroundStyle(copiedReport ? .green : .primary)
-                    .clipShape(Capsule())
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
             
@@ -1060,13 +1060,13 @@ public struct BenchmarkView: View {
                     title: "P50 Latency (Median)",
                     value: String(format: "%.0f µs", res.medianLatencyUs),
                     subtitle: String(format: "P90: %.0f µs • P99: %.0f µs", res.p90LatencyUs, res.p99LatencyUs),
-                    color: .purple
+                    color: StudioTheme.ember
                 )
                 metricBox(
                     title: "Decode Throughput",
                     value: String(format: "%.1f tok/s", res.tokensPerSecCeiling),
                     subtitle: String(format: "%.2f ms / token", (res.medianLatencyUs / 1000.0) * 14.0),
-                    color: .blue
+                    color: StudioTheme.ember
                 )
                 metricBox(
                     title: "DRAM Bandwidth",
@@ -1078,7 +1078,7 @@ public struct BenchmarkView: View {
                     title: "Compute Throughput",
                     value: String(format: "%.1f GFLOP/s", res.gflops),
                     subtitle: String(format: "Jitter: ±%.1f µs", res.jitterUs),
-                    color: .orange
+                    color: StudioTheme.ember
                 )
                 metricBox(
                     title: "Thermal State",
@@ -1098,17 +1098,16 @@ public struct BenchmarkView: View {
                 Image(systemName: res.validationPassed ? "checkmark.seal.fill" : "exclamationmark.triangle.fill")
                     .foregroundStyle(res.validationPassed ? .green : .yellow)
                 Text(res.validationPassed ? "Bit-Exact Numerical Parity: Exact NEON/Metal Match" : "Tolerance Deviation")
-                    .font(.caption)
+                    .font(StudioTheme.body(.caption))
                     .fontWeight(.semibold)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 6)
-            .background(Color(.systemGray6))
+            .background(StudioTheme.surfaceRaised)
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     // MARK: - Kernel & Memory Architecture Lab
@@ -1119,24 +1118,24 @@ public struct BenchmarkView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Image(systemName: "atom")
-                            .font(.subheadline)
-                            .foregroundStyle(.purple)
+                            .font(StudioTheme.body(.subheadline))
+                            .foregroundStyle(StudioTheme.ember)
                         Text("Kernel & Memory Architecture Lab")
-                            .font(.subheadline)
+                            .font(StudioTheme.body(.subheadline))
                             .fontWeight(.bold)
                     }
                     Text("A18 Pro Custom Compute Kernels & Memory Hierarchy")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Text("OPTIMIZED")
-                    .font(.system(.caption2, design: .default, weight: .bold))
+                    .font(StudioTheme.body(.caption2, weight: .bold))
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
-                    .background(Color.purple.opacity(0.15))
-                    .foregroundStyle(.purple)
-                    .clipShape(Capsule())
+                    .background(StudioTheme.ember.opacity(0.15))
+                    .foregroundStyle(StudioTheme.ember)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             
             Divider()
@@ -1153,19 +1152,19 @@ public struct BenchmarkView: View {
                     title: "Arithmetic Intensity",
                     value: String(format: "%.2f FLOP/B", res.arithmeticIntensity),
                     subtitle: "Roofline Memory-Bound",
-                    color: .blue
+                    color: StudioTheme.ember
                 )
                 metricBox(
                     title: "DRAM Traffic Saved",
                     value: String(format: "%.1f MB/tok", res.memoryTrafficSavedMB),
                     subtitle: "2-Row Tiling Register Reuse",
-                    color: .purple
+                    color: StudioTheme.ember
                 )
                 metricBox(
                     title: "Ping-Pong Arena",
                     value: "< 4.0 MB",
                     subtitle: "Double-Buffered (Page Aligned)",
-                    color: .orange
+                    color: StudioTheme.ember
                 )
             }
             
@@ -1173,11 +1172,11 @@ public struct BenchmarkView: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Quantized INT8 KV Cache Analysis")
-                        .font(.caption)
+                        .font(StudioTheme.body(.caption))
                         .fontWeight(.bold)
                     Spacer()
                     Text("50% Memory Reduction")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .fontWeight(.semibold)
                         .foregroundStyle(.green)
                 }
@@ -1194,13 +1193,13 @@ public struct BenchmarkView: View {
                     Image(systemName: "arrow.down.circle.fill")
                         .foregroundStyle(.green)
                     Text("Context \(selectedContextLength) tokens: Saves ")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                     + Text(String(format: "%.1f MB", savedMB))
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .fontWeight(.bold)
                         .foregroundColor(.green)
                     + Text(" vs standard FP16 KV cache")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                 }
                 .padding(8)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -1208,52 +1207,51 @@ public struct BenchmarkView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             .padding(10)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .background(StudioTheme.canvas)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             
             // Applied Kernel Optimizations Checklist
             VStack(alignment: .leading, spacing: 6) {
                 Text("Applied Kernel & Memory Optimizations")
-                    .font(.caption2)
+                    .font(StudioTheme.body(.caption2))
                     .fontWeight(.bold)
                     .foregroundStyle(.secondary)
                 
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.green)
                     Text("Scale Multiplications Factored (31x fewer ALU ops per block)")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                 }
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.green)
                     Text("2-Row Output Tiling (50% activation DRAM traffic cut)")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                 }
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.green)
                     Text("6-Core Grand Central Dispatch with in-register SIMD dot products")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                 }
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.green)
                     Text("Ping-Pong Activation Arena (<4 MB double-buffer cap, 0 malloc/free)")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                 }
             }
             .padding(10)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .background(StudioTheme.canvas)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     // MARK: - Model Selector & Matrix
@@ -1263,11 +1261,11 @@ public struct BenchmarkView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Model Suite (.mllm)")
-                        .font(.subheadline)
+                        .font(StudioTheme.body(.subheadline))
                         .fontWeight(.bold)
                         .foregroundStyle(.secondary)
                     Text("\(discoveredModels.count) models discovered on device")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -1277,12 +1275,12 @@ public struct BenchmarkView: View {
                         Image(systemName: "plus.circle.fill")
                         Text("Import")
                     }
-                    .font(.caption)
+                    .font(StudioTheme.body(.caption))
                     .fontWeight(.semibold)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(Color(.systemGray5))
-                    .clipShape(Capsule())
+                    .background(StudioTheme.surfaceRaised)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
             
@@ -1292,13 +1290,13 @@ public struct BenchmarkView: View {
                     ForEach(["All", "Qwen", "Llama", "Mistral", "Gemma", "0.5B", "1.5B", "3B", "7B", "Q4_0", "MQ4", "INT8"], id: \.self) { filter in
                         Button(action: { selectedFilter = filter }) {
                             Text(filter)
-                                .font(.caption2)
+                                .font(StudioTheme.body(.caption2))
                                 .fontWeight(.semibold)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 5)
-                                .background(selectedFilter == filter ? Color.blue : Color(.systemGray5))
+                                .background(selectedFilter == filter ? StudioTheme.ember : StudioTheme.surfaceRaised)
                                 .foregroundStyle(selectedFilter == filter ? .white : .primary)
-                                .clipShape(Capsule())
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                     }
                 }
@@ -1308,10 +1306,10 @@ public struct BenchmarkView: View {
             if filteredModels.isEmpty {
                 VStack(spacing: 8) {
                     Image(systemName: "tray")
-                        .font(.title)
+                        .font(StudioTheme.heading(.title))
                         .foregroundStyle(.secondary)
                     Text("No models matching filter")
-                        .font(.caption)
+                        .font(StudioTheme.body(.caption))
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)
@@ -1325,13 +1323,12 @@ public struct BenchmarkView: View {
             }
             
             Text(statusMessage)
-                .font(.caption2)
+                .font(StudioTheme.body(.caption2))
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     private var filteredModels: [ModelFileItem] {
@@ -1352,40 +1349,40 @@ public struct BenchmarkView: View {
             HStack(spacing: 12) {
                 ZStack {
                     Circle()
-                        .fill(isCurrent ? Color.green.opacity(0.15) : Color.blue.opacity(0.12))
+                        .fill(isCurrent ? Color.green.opacity(0.15) : StudioTheme.ember.opacity(0.12))
                         .frame(width: 36, height: 36)
                     Image(systemName: isCurrent ? "bolt.fill" : "cube.fill")
-                        .font(.caption)
-                        .foregroundStyle(isCurrent ? .green : .blue)
+                        .font(StudioTheme.body(.caption))
+                        .foregroundStyle(isCurrent ? .green : StudioTheme.ember)
                 }
                 
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Text(model.name)
-                            .font(.caption)
+                            .font(StudioTheme.body(.caption))
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
                             .lineLimit(1)
                         if isCurrent {
                             Text("ACTIVE")
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                                 .padding(.horizontal, 5)
                                 .padding(.vertical, 1)
                                 .background(Color.green)
                                 .foregroundStyle(.white)
-                                .clipShape(Capsule())
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                     }
                     
                     HStack(spacing: 6) {
                         Text(model.scaleLabel)
-                            .font(.caption2)
+                            .font(StudioTheme.body(.caption2))
                             .foregroundStyle(.secondary)
                         Text("•")
-                            .font(.caption2)
+                            .font(StudioTheme.body(.caption2))
                             .foregroundStyle(.secondary)
                         Text(String(format: "%.1f MB", model.sizeMB))
-                            .font(.caption2)
+                            .font(StudioTheme.body(.caption2))
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -1393,7 +1390,7 @@ public struct BenchmarkView: View {
                 Spacer()
                 
                 Text(model.quantLabel)
-                    .font(.system(.caption2, design: .rounded, weight: .bold))
+                    .font(StudioTheme.body(.caption2, weight: .bold))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .background(quantBadgeColor(model.quantLabel))
@@ -1401,10 +1398,10 @@ public struct BenchmarkView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 6))
             }
             .padding(10)
-            .background(isCurrent ? Color.green.opacity(0.06) : Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .background(isCurrent ? Color.green.opacity(0.06) : StudioTheme.canvas)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: 8)
                     .stroke(isCurrent ? Color.green.opacity(0.5) : Color.clear, lineWidth: 1.5)
             )
         }
@@ -1413,11 +1410,11 @@ public struct BenchmarkView: View {
     
     private func quantBadgeColor(_ quant: String) -> Color {
         if quant.contains("MQ4") {
-            return .purple
+            return StudioTheme.ember
         } else if quant.contains("INT8") || quant.contains("Q8") {
-            return .orange
+            return StudioTheme.ember
         } else if quant.contains("Q4") {
-            return .blue
+            return StudioTheme.ember
         }
         return .secondary
     }
@@ -1426,14 +1423,14 @@ public struct BenchmarkView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Session Comparison Matrix")
-                    .font(.subheadline)
+                    .font(StudioTheme.body(.subheadline))
                     .fontWeight(.bold)
                     .foregroundStyle(.secondary)
                 Spacer()
                 Button("Clear") {
                     benchmarkHistory.removeAll()
                 }
-                .font(.caption2)
+                .font(StudioTheme.body(.caption2))
                 .foregroundStyle(.secondary)
             }
             
@@ -1442,51 +1439,50 @@ public struct BenchmarkView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(record.modelName)
-                                .font(.caption)
+                                .font(StudioTheme.body(.caption))
                                 .fontWeight(.bold)
                             Text("\(record.quantType) • \(record.dimensions)")
-                                .font(.caption2)
+                                .font(StudioTheme.body(.caption2))
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
                         VStack(alignment: .trailing, spacing: 2) {
                             Text(String(format: "%.0f µs • %.1f GB/s", record.gpuLatencyUs, record.bandwidthGBs))
-                                .font(.caption)
+                                .font(StudioTheme.body(.caption))
                                 .fontWeight(.bold)
                                 .foregroundStyle(.green)
                             Text(String(format: "%.1f tok/s (%.1fx CPU)", record.tokensPerSec, record.speedup))
-                                .font(.caption2)
-                                .foregroundStyle(.purple)
+                                .font(StudioTheme.body(.caption2))
+                                .foregroundStyle(StudioTheme.ember)
                         }
                     }
                     .padding(8)
-                    .background(Color(.systemBackground))
+                    .background(StudioTheme.canvas)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
         }
         .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .studioCard()
     }
     
     private func metricBox(title: String, value: String, subtitle: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(title)
-                .font(.caption2)
+                .font(StudioTheme.body(.caption2))
                 .foregroundStyle(.secondary)
             Text(value)
-                .font(.title3)
+                .font(StudioTheme.heading(.title3))
                 .fontWeight(.bold)
                 .foregroundStyle(color)
             Text(subtitle)
-                .font(.caption2)
+                .font(StudioTheme.body(.caption2))
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(10)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .background(StudioTheme.canvas)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
     
     // MARK: - Actions

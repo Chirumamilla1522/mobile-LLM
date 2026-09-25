@@ -23,6 +23,7 @@ public enum VisionAnalysisMode: String, CaseIterable, Identifiable {
 
 public struct LiveCameraVisionView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     public let onAnalyzeComplete: ((String) -> Void)?
     
     @State private var selectedMode: VisionAnalysisMode = .mathSolver
@@ -47,7 +48,7 @@ public struct LiveCameraVisionView: View {
                 }
                 .ignoresSafeArea()
                 
-                // Futuristic HUD Overlay
+                // Camera controls and live text
                 VStack(spacing: 0) {
                     // Mode Selector Bar
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -59,14 +60,14 @@ public struct LiveCameraVisionView: View {
                                             .frame(width: 12, height: 12)
                                         Text(mode.rawValue)
                                     }
-                                    .font(.system(.caption, design: .rounded, weight: .semibold))
+                                    .font(StudioTheme.body(.caption, weight: .semibold))
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 8)
-                                    .background(selectedMode == mode ? StudioTheme.cobalt : Color.black.opacity(0.6))
+                                    .background(selectedMode == mode ? StudioTheme.ember : Color.black.opacity(0.6))
                                     .foregroundStyle(.white)
-                                    .clipShape(Capsule())
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
                                     .overlay(
-                                        Capsule().stroke(Color.white.opacity(0.2), lineWidth: 0.5)
+                                        RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.2), lineWidth: 0.5)
                                     )
                                 }
                             }
@@ -79,19 +80,21 @@ public struct LiveCameraVisionView: View {
                     
                     // Center Targeting Reticle
                     ZStack {
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color.cyan.opacity(0.6), lineWidth: 2)
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(StudioTheme.ember, lineWidth: 1)
                             .frame(maxWidth: .infinity, maxHeight: 240)
                             .padding(.horizontal, 24)
                         
                         // Animated Scanning Line
                         Rectangle()
-                            .fill(LinearGradient(colors: [Color.clear, Color.cyan.opacity(0.8), Color.clear], startPoint: .top, endPoint: .bottom))
-                            .frame(height: 3)
+                            .fill(StudioTheme.ember)
+                            .frame(height: 1)
                             .offset(y: scanLineOffset)
                             .onAppear {
-                                withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
-                                    scanLineOffset = 140
+                                if !reduceMotion {
+                                    withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
+                                        scanLineOffset = 140
+                                    }
                                 }
                             }
                     }
@@ -106,26 +109,26 @@ public struct LiveCameraVisionView: View {
                                     .frame(width: 12, height: 12)
                                     .foregroundStyle(StudioTheme.phosphor)
                                 Text("NEURAL OCR SCANNER")
-                                    .font(.system(.caption2, design: .rounded, weight: .bold))
+                                    .font(StudioTheme.body(.caption2, weight: .bold))
                                     .foregroundStyle(StudioTheme.phosphor)
                             }
                             Spacer()
                             Text("\(recognizedLines.count) lines detected")
-                                .font(.caption2)
+                                .font(StudioTheme.body(.caption2))
                                 .foregroundStyle(.gray)
                         }
                         
                         if !aiAnalysisOutput.isEmpty {
                             ScrollView {
                                 Text(aiAnalysisOutput)
-                                    .font(.caption)
+                                    .font(StudioTheme.body(.caption))
                                     .foregroundStyle(.white)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .frame(maxHeight: 140)
                         } else {
                             Text(recognizedLines.isEmpty ? "Point camera at math, code, or receipts..." : recognizedLines.prefix(3).joined(separator: " • "))
-                                .font(.caption)
+                                .font(StudioTheme.body(.caption))
                                 .foregroundStyle(.white.opacity(0.8))
                                 .lineLimit(2)
                         }
@@ -136,25 +139,25 @@ public struct LiveCameraVisionView: View {
                                 if isProcessingAnalysis {
                                     ProgressView().tint(.white)
                                 } else {
-                                    StudioIcon(.wand)
+                                    StudioIcon(.scan)
                                         .frame(width: 14, height: 14)
                                 }
                                 Text(isProcessingAnalysis ? "Analyzing on Neural Engine..." : "Analyze Current View")
                             }
-                            .font(.system(.footnote, design: .default, weight: .semibold))
+                            .font(StudioTheme.body(.footnote, weight: .semibold))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(StudioTheme.cobalt)
+                            .background(StudioTheme.ember)
                             .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                         .disabled(isProcessingAnalysis || recognizedLines.isEmpty)
                     }
                     .padding(16)
                     .background(Color.black.opacity(0.85))
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20)
+                        RoundedRectangle(cornerRadius: 8)
                             .stroke(Color.white.opacity(0.15), lineWidth: 1)
                     )
                     .padding(.horizontal, 16)

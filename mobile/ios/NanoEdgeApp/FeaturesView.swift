@@ -27,36 +27,43 @@ public struct FeaturesView: View {
     }
 
     public var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 36) {
-                    introduction
-                    notebookButton
-                    quickActions
-                    modelStatus
-                }
-                .frame(maxWidth: 620)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, 24)
-                .padding(.top, 32)
-                .padding(.bottom, 48)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 36) {
+                introduction
+                notebookButton
+                quickActions
+                modelStatus
             }
-            .navigationTitle("NanoEdge")
-            .navigationBarTitleDisplayMode(.inline)
-            .background(StudioTheme.canvas)
+            .frame(maxWidth: 680, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 24)
+            .padding(.top, 32)
+            .padding(.bottom, 48)
         }
+        .background(StudioTheme.canvas)
     }
 
     private var introduction: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Think locally.")
-                .font(.system(.largeTitle, design: .default, weight: .semibold))
-                .tracking(-1.2)
+            HStack {
+                Text("NANOEDGE / 01")
+                    .foregroundStyle(StudioTheme.ember)
+                Spacer()
+                Text("PRIVATE COMPUTE")
+                    .foregroundStyle(StudioTheme.titanium)
+            }
+            .font(StudioTheme.body(.caption2, weight: .bold))
+            .tracking(1.6)
+            .padding(.bottom, 28)
+
+            Text("Studio")
+                .font(StudioTheme.heading(.largeTitle, weight: .bold))
+                .tracking(-1.5)
                 .foregroundStyle(.primary)
             Text(activeModelName == "None"
-                 ? "Your private workspace is ready. Add a model to begin."
-                 : "A private workspace for your ideas, powered by \(activeModelName).")
-                .font(.body)
+                 ? "Models and tools that run on this device. Add a model to begin."
+                 : "Running \(activeModelName) on this device.")
+                .font(StudioTheme.body(.body))
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -69,10 +76,10 @@ public struct FeaturesView: View {
         } label: {
             HStack {
                 Label(activeModelName == "None" ? "Browse models" : "Open Notebook", systemImage: "square.and.pencil")
-                    .font(.body.weight(.semibold))
+                    .font(StudioTheme.body(.body, weight: .semibold))
                 Spacer()
                 Image(systemName: "arrow.right")
-                    .font(.body.weight(.medium))
+                    .font(StudioTheme.body(.body, weight: .medium))
                     .foregroundStyle(StudioTheme.ember)
             }
             .foregroundStyle(.primary)
@@ -87,7 +94,7 @@ public struct FeaturesView: View {
     private var quickActions: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Quick actions")
-                .font(.headline)
+                .font(StudioTheme.heading(.headline))
             VStack(spacing: 0) {
                 quickAction("Speak", symbol: "waveform", action: onOpenVoiceOrb)
                 quickAction("Use camera", symbol: "camera", action: onOpenLiveCamera)
@@ -99,15 +106,15 @@ public struct FeaturesView: View {
         Button(action: action) {
             HStack(spacing: 14) {
                 Image(systemName: symbol)
-                    .font(.body)
+                    .font(StudioTheme.body(.body))
                     .foregroundStyle(StudioTheme.ember)
                     .frame(width: 24)
                 Text(title)
-                    .font(.body)
+                    .font(StudioTheme.body(.body))
                     .foregroundStyle(.primary)
                 Spacer()
                 Image(systemName: "arrow.up.right")
-                    .font(.footnote)
+                    .font(StudioTheme.body(.footnote))
                     .foregroundStyle(.secondary)
             }
             .frame(minHeight: 48)
@@ -120,25 +127,25 @@ public struct FeaturesView: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 Text("On this device")
-                    .font(.headline)
+                    .font(StudioTheme.heading(.headline))
                 Spacer()
                 Button("Manage") { selectedTab = 3 }
-                    .font(.subheadline)
+                    .font(StudioTheme.body(.subheadline))
             }
             .padding(.bottom, 18)
 
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "cpu")
-                    .font(.body)
+                    .font(StudioTheme.body(.body))
                     .foregroundStyle(.secondary)
                     .frame(width: 24)
                 VStack(alignment: .leading, spacing: 5) {
                     Text(activeModelName == "None" ? "No model loaded" : activeModelName)
-                        .font(.body.weight(.medium))
+                        .font(StudioTheme.body(.body, weight: .medium))
                         .foregroundStyle(.primary)
                         .lineLimit(2)
                     Text("\(discoveredModels.count) models available locally")
-                        .font(.subheadline)
+                        .font(StudioTheme.body(.subheadline))
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)
@@ -148,7 +155,7 @@ public struct FeaturesView: View {
 
             if physicalFootprintMB > 0 {
                 Text("Memory in use  \(physicalFootprintMB, specifier: "%.0f") MB")
-                    .font(.footnote.monospacedDigit())
+                    .font(StudioTheme.body(.footnote).monospacedDigit())
                     .foregroundStyle(.secondary)
                     .contentTransition(.numericText())
                     .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: Int(physicalFootprintMB))

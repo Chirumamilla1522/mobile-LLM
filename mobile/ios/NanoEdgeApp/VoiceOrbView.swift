@@ -10,243 +10,152 @@ public enum VoiceChatState: String {
 
 public struct VoiceOrbView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ObservedObject private var speechManager = SpeechManager.shared
     
     @Binding var activeModelName: String
     @State private var chatState: VoiceChatState = .idle
     @State private var userSpokenText: String = ""
     @State private var modelSpokenText: String = ""
-    @State private var orbRotation: Double = 0.0
-    @State private var pulseScale: CGFloat = 1.0
     
     public init(activeModelName: Binding<String>) {
         self._activeModelName = activeModelName
     }
     
     public var body: some View {
-        ZStack {
-            // Dark futuristic backdrop
-            Color.black.ignoresSafeArea()
-            
-            // Ambient background glow
-            RadialGradient(
-                colors: [stateGlowColor.opacity(0.35), Color.clear],
-                center: .center,
-                startRadius: 40,
-                endRadius: 280
-            )
-            .ignoresSafeArea()
-            
-            VStack(spacing: 24) {
-                // Header Bar
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Live Voice Mode")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundStyle(.white)
-                        HStack(spacing: 4) {
-                            Circle().fill(Color.green).frame(width: 6, height: 6)
-                            Text("Apple Silicon Duplex • \(activeModelName)")
-                                .font(.caption2)
-                                .foregroundStyle(.gray)
-                        }
-                    }
-                    Spacer()
-                    Button(action: {
-                        speechManager.stopSpeaking()
-                        speechManager.stopRecording()
-                        dismiss()
-                    }) {
-                        StudioIcon(.x)
-                            .frame(width: 18, height: 18)
-                            .foregroundStyle(.white.opacity(0.7))
-                            .padding(8)
-                            .background(Color.white.opacity(0.12))
-                            .clipShape(Circle())
-                    }
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("VOICE / ON DEVICE")
+                        .font(StudioTheme.body(.caption, weight: .bold))
+                        .tracking(2)
+                        .foregroundStyle(StudioTheme.ember)
+                    Text(activeModelName)
+                        .font(StudioTheme.body(.subheadline))
+                        .foregroundStyle(StudioTheme.titanium)
+                        .lineLimit(1)
                 }
-                .padding(.horizontal, 24)
-                .padding(.top, 16)
-                
                 Spacer()
-                
-                // Animated Voice Orb
-                ZStack {
-                    // Outer Ripple 1
-                    Circle()
-                        .stroke(stateGlowColor.opacity(0.25), lineWidth: 2)
-                        .frame(width: 220, height: 220)
-                        .scaleEffect(1.0 + CGFloat(speechManager.currentAudioLevel) * 0.5)
-                        .animation(.easeOut(duration: 0.15), value: speechManager.currentAudioLevel)
-                    
-                    // Outer Ripple 2
-                    Circle()
-                        .stroke(stateGlowColor.opacity(0.15), lineWidth: 1.5)
-                        .frame(width: 260, height: 260)
-                        .scaleEffect(1.0 + CGFloat(speechManager.currentAudioLevel) * 0.7)
-                        .animation(.easeOut(duration: 0.2), value: speechManager.currentAudioLevel)
-                    
-                    // Core Fluid Glowing Orb
-                    Circle()
-                        .fill(
-                            AngularGradient(
-                                gradient: Gradient(colors: [
-                                    Color.cyan,
-                                    Color.blue,
-                                    Color.indigo,
-                                    Color.purple,
-                                    Color.pink,
-                                    Color.cyan
-                                ]),
-                                center: .center,
-                                angle: .degrees(orbRotation)
-                            )
-                        )
-                        .frame(width: 160, height: 160)
-                        .blur(radius: 6)
-                        .scaleEffect(1.0 + CGFloat(speechManager.currentAudioLevel) * 0.35)
-                        .shadow(color: stateGlowColor.opacity(0.8), radius: 35, x: 0, y: 0)
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white.opacity(0.4), lineWidth: 1.5)
-                        )
-                        .onAppear {
-                            withAnimation(.linear(duration: 8.0).repeatForever(autoreverses: false)) {
-                                orbRotation = 360.0
-                            }
-                        }
-                    
-                    // Center specular highlight
-                    Circle()
-                        .fill(Color.white.opacity(0.25))
-                        .frame(width: 60, height: 60)
-                        .blur(radius: 8)
+                Button {
+                    speechManager.stopSpeaking()
+                    speechManager.stopRecording()
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(StudioTheme.body(.body, weight: .semibold))
+                        .frame(width: 44, height: 44)
+                        .background(StudioTheme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border))
                 }
-                .frame(height: 280)
-                
-                // State Label & Waveform Status
-                VStack(spacing: 8) {
-                    Text(chatState.rawValue)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                    
-                    if chatState == .listening {
-                        Text("Speak naturally. Will answer automatically on silence.")
-                            .font(.caption)
-                            .foregroundStyle(.gray)
-                    } else if chatState == .speaking {
-                        Text("Tap anywhere to interrupt.")
-                            .font(.caption)
-                            .foregroundStyle(.cyan)
-                    }
+                .accessibilityLabel("Close voice mode")
+            }
+
+            Spacer(minLength: 60)
+
+            Text(chatState.rawValue)
+                .font(StudioTheme.heading(.largeTitle, weight: .bold))
+                .tracking(-1)
+                .contentTransition(.opacity)
+            Text(chatState == .listening ? "Speak naturally. Recording stops when you pause." :
+                 chatState == .speaking ? "Tap the microphone to interrupt." :
+                 "Your conversation stays on this device.")
+                .font(StudioTheme.body(.body))
+                .foregroundStyle(StudioTheme.titanium)
+                .padding(.top, 10)
+
+            HStack(alignment: .center, spacing: 5) {
+                ForEach(0..<17, id: \.self) { index in
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(chatState == .listening ? StudioTheme.ember : StudioTheme.borderActive)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 12 + CGFloat((index * 7) % 5) * 8 + CGFloat(speechManager.currentAudioLevel) * 45)
                 }
-                
-                // Live Conversation Cards
-                VStack(spacing: 12) {
-                    if !userSpokenText.isEmpty {
-                        HStack {
-                            Text("You: \(userSpokenText)")
-                                .font(.subheadline)
-                                .foregroundStyle(.white.opacity(0.9))
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 10)
-                                .background(Color.white.opacity(0.12))
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                            Spacer()
-                        }
-                    }
-                    
-                    if !modelSpokenText.isEmpty {
-                        HStack {
-                            Spacer()
-                            Text(modelSpokenText)
-                                .font(.subheadline)
-                                .foregroundStyle(.cyan)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 10)
-                                .background(Color.cyan.opacity(0.15))
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                        }
-                    }
+            }
+            .frame(height: 110)
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: speechManager.currentAudioLevel)
+            .padding(.vertical, 32)
+            .accessibilityLabel(chatState == .listening ? "Microphone level" : "Voice activity")
+
+            VStack(alignment: .leading, spacing: 16) {
+                if !userSpokenText.isEmpty {
+                    transcript("YOU", text: userSpokenText)
                 }
-                .padding(.horizontal, 24)
-                .frame(minHeight: 90)
-                
-                Spacer()
-                
-                // Bottom Interactive Controls
-                HStack(spacing: 32) {
-                    // Interrupt / Stop Speaking Button
-                    Button(action: {
-                        speechManager.stopSpeaking()
-                        chatState = .idle
-                    }) {
-                        StudioIcon(.square)
-                            .frame(width: 18, height: 18)
-                            .foregroundStyle(.white)
-                            .frame(width: 56, height: 56)
-                            .background(Color.red.opacity(0.8))
-                            .clipShape(Circle())
-                    }
-                    .disabled(chatState != .speaking)
-                    .opacity(chatState == .speaking ? 1.0 : 0.3)
-                    
-                    // Main Mic / Turn Toggle Button
-                    Button(action: {
-                        handleMicTap()
-                    }) {
-                        StudioIcon(chatState == .listening ? .audioWaveform : .mic)
-                            .frame(width: 28, height: 28)
-                            .foregroundStyle(.white)
-                            .frame(width: 76, height: 76)
-                            .background(chatState == .listening ? StudioTheme.phosphor : StudioTheme.ember)
-                            .clipShape(Circle())
-                            .shadow(color: (chatState == .listening ? StudioTheme.phosphor : StudioTheme.ember).opacity(0.5), radius: 15)
-                    }
-                    
-                    // Reset / Clear Button
-                    Button(action: {
-                        speechManager.stopSpeaking()
-                        speechManager.stopRecording()
-                        userSpokenText = ""
-                        modelSpokenText = ""
-                        chatState = .idle
-                    }) {
-                        StudioIcon(.rotateCw)
-                            .frame(width: 18, height: 18)
-                            .foregroundStyle(.white)
-                            .frame(width: 56, height: 56)
-                            .background(Color.white.opacity(0.15))
-                            .clipShape(Circle())
-                    }
+                if !modelSpokenText.isEmpty {
+                    transcript("NANOEDGE", text: modelSpokenText)
                 }
-                .padding(.bottom, 32)
+            }
+            .frame(maxWidth: .infinity, minHeight: 110, alignment: .topLeading)
+
+            Spacer(minLength: 32)
+
+            HStack(spacing: 10) {
+                Button(action: handleMicTap) {
+                    Label(chatState == .listening ? "Finish speaking" : "Start speaking",
+                          systemImage: chatState == .listening ? "stop.fill" : "mic.fill")
+                        .font(StudioTheme.body(.body, weight: .semibold))
+                        .frame(maxWidth: .infinity, minHeight: 54)
+                        .foregroundStyle(.black)
+                        .background(StudioTheme.ember)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                Button {
+                    speechManager.stopSpeaking()
+                    speechManager.stopRecording()
+                    userSpokenText = ""
+                    modelSpokenText = ""
+                    chatState = .idle
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                        .frame(width: 54, height: 54)
+                        .background(StudioTheme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border))
+                }
+                .accessibilityLabel("Reset conversation")
+                Button {
+                    speechManager.stopSpeaking()
+                    chatState = .idle
+                } label: {
+                    Image(systemName: "speaker.slash")
+                        .frame(width: 54, height: 54)
+                        .background(StudioTheme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border))
+                }
+                .disabled(chatState != .speaking)
+                .accessibilityLabel("Stop speaking")
             }
         }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(StudioTheme.canvas.ignoresSafeArea())
+        .tint(StudioTheme.ember)
         .onAppear {
             setupVoiceCallbacks()
-            // Auto start listening on open
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                startListening()
-            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { startListening() }
         }
         .onDisappear {
             speechManager.stopSpeaking()
             speechManager.stopRecording()
         }
     }
-    
-    private var stateGlowColor: Color {
-        switch chatState {
-        case .listening: return .green
-        case .thinking: return .purple
-        case .speaking: return .cyan
-        case .idle: return .blue
+
+    private func transcript(_ speaker: String, text: String) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(speaker)
+                .font(StudioTheme.body(.caption2, weight: .bold))
+                .tracking(1.5)
+                .foregroundStyle(StudioTheme.ember)
+            Text(text)
+                .font(StudioTheme.body(.body))
+                .foregroundStyle(.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .padding(.top, 12)
+        .overlay(alignment: .top) { StudioTheme.border.frame(height: 1) }
     }
-    
+
     private func setupVoiceCallbacks() {
         speechManager.onSilenceDetected = { finalSpoken in
             guard !finalSpoken.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }

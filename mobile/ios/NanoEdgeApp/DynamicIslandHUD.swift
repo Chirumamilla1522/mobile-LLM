@@ -22,11 +22,11 @@ public struct DynamicIslandHUD: View {
                         
                         VStack(alignment: .leading, spacing: 1) {
                             Text(modelName)
-                                .font(.system(.caption, design: .rounded, weight: .semibold))
+                                .font(StudioTheme.body(.caption, weight: .semibold))
                                 .foregroundStyle(.white)
                                 .lineLimit(1)
                             Text(engineName)
-                                .font(.system(.caption2, design: .default, weight: .bold))
+                                .font(StudioTheme.body(.caption2, weight: .bold))
                                 .foregroundStyle(.gray)
                         }
                     }
@@ -36,21 +36,21 @@ public struct DynamicIslandHUD: View {
                     // Center: Real-time Decode Speed
                     HStack(spacing: 4) {
                         Image(systemName: "bolt.fill")
-                            .font(.caption2)
+                            .font(StudioTheme.body(.caption2))
                             .foregroundStyle(.yellow)
                         Text(String(format: "%.1f tok/s", tokensPerSec))
-                            .font(.system(.caption, design: .rounded, weight: .semibold))
+                            .font(StudioTheme.body(.caption, weight: .semibold))
                             .foregroundStyle(.white)
                     }
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .background(Color.white.opacity(0.12))
-                    .clipShape(Capsule())
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     
                     // Right: Stop / Action Control
                     Button(action: onStopTap) {
                         Image(systemName: "stop.fill")
-                            .font(.system(.caption2, design: .default, weight: .bold))
+                            .font(StudioTheme.body(.caption2, weight: .bold))
                             .foregroundStyle(.white)
                             .frame(width: 24, height: 24)
                             .background(Color.red.opacity(0.8))
@@ -61,11 +61,10 @@ public struct DynamicIslandHUD: View {
                 .padding(.vertical, 10)
                 .frame(maxWidth: .infinity)
                 .background(
-                    RoundedRectangle(cornerRadius: 24)
+                    RoundedRectangle(cornerRadius: 8)
                         .fill(Color.black.opacity(0.92))
-                        .shadow(color: Color.black.opacity(0.5), radius: 12, y: 6)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 24)
+                            RoundedRectangle(cornerRadius: 8)
                                 .stroke(Color.white.opacity(0.2), lineWidth: 1)
                         )
                 )

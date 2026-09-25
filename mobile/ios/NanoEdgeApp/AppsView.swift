@@ -21,13 +21,7 @@ public enum AITool: String, CaseIterable, Identifiable {
     }
     
     public var accentColor: Color {
-        switch self {
-        case .summarizer: return StudioTheme.cobalt
-        case .tonePolish: return StudioTheme.ember
-        case .codeAssist: return StudioTheme.phosphor
-        case .jsonExtractor: return StudioTheme.amber
-        case .ragVault: return StudioTheme.purple
-        }
+        StudioTheme.ember
     }
 }
 
@@ -64,7 +58,18 @@ public struct AppsView: View {
     public var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 18) {
+                VStack(alignment: .leading, spacing: 18) {
+                    VStack(alignment: .leading, spacing: 26) {
+                        Text("INSTRUMENTS / 03")
+                            .font(StudioTheme.body(.caption2, weight: .bold))
+                            .tracking(1.6)
+                            .foregroundStyle(StudioTheme.ember)
+                        Text("Instruments")
+                            .font(StudioTheme.heading(.largeTitle, weight: .bold))
+                            .tracking(-1.5)
+                    }
+                    .padding(.bottom, 12)
+
                     // Tool Selector Carousel (Pill Bar)
                     toolPickerSection
                     
@@ -86,11 +91,13 @@ public struct AppsView: View {
                             .transition(reduceMotion ? .opacity : .opacity.combined(with: .move(edge: .bottom)))
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 14)
+                .frame(maxWidth: 760, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.top, 32)
+                .padding(.bottom, 40)
             }
-            .navigationTitle("Creative Instruments")
-            .navigationBarTitleDisplayMode(.large)
+            .toolbar(.hidden, for: .navigationBar)
             .background(StudioTheme.canvas)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.28), value: selectedTool)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.28), value: !outputText.isEmpty || isGenerating)
@@ -122,7 +129,7 @@ public struct AppsView: View {
                             StudioIcon(tool.symbol)
                                 .frame(width: 14, height: 14)
                             Text(tool.rawValue)
-                                .font(.system(.footnote, design: .rounded, weight: .semibold))
+                                .font(StudioTheme.body(.footnote, weight: .semibold))
                                 .lineLimit(1)
                                 .fixedSize(horizontal: true, vertical: false)
                         }
@@ -130,9 +137,9 @@ public struct AppsView: View {
                         .padding(.vertical, 8)
                         .background(isSelected ? tool.accentColor.opacity(0.18) : StudioTheme.surface)
                         .foregroundStyle(isSelected ? tool.accentColor : Color.secondary)
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .overlay(
-                            Capsule()
+                            RoundedRectangle(cornerRadius: 8)
                                 .stroke(isSelected ? tool.accentColor.opacity(0.45) : StudioTheme.border, lineWidth: 1)
                         )
                     }
@@ -163,7 +170,7 @@ public struct AppsView: View {
                         .frame(width: 12, height: 12)
                         .foregroundStyle(StudioTheme.titanium)
                     Text(activeModelName.replacingOccurrences(of: "_instruct_q4", with: "").replacingOccurrences(of: "_q4", with: ""))
-                        .font(.system(.caption, design: .default, weight: .semibold))
+                        .font(StudioTheme.body(.caption, weight: .semibold))
                         .foregroundStyle(.primary)
                     StudioIcon(.chevronDown)
                         .frame(width: 10, height: 10)
@@ -172,9 +179,9 @@ public struct AppsView: View {
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
                 .background(StudioTheme.surfaceRaised)
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .overlay(
-                    Capsule().stroke(StudioTheme.border, lineWidth: 0.8)
+                    RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 0.8)
                 )
             }
             
@@ -183,17 +190,17 @@ public struct AppsView: View {
                 HStack(spacing: 4) {
                     StudioIcon(selectedEngine == .metalGPU ? .zap : .cpu)
                         .frame(width: 11, height: 11)
-                        .foregroundStyle(selectedEngine == .metalGPU ? StudioTheme.phosphor : StudioTheme.ember)
+                        .foregroundStyle(StudioTheme.ember)
                     Text(selectedEngine == .metalGPU ? "Metal GPU" : "NEON CPU")
-                        .font(.system(.caption, design: .default, weight: .semibold))
+                        .font(StudioTheme.body(.caption, weight: .semibold))
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
-                .background((selectedEngine == .metalGPU ? StudioTheme.phosphor : StudioTheme.ember).opacity(0.12))
-                .foregroundStyle(selectedEngine == .metalGPU ? StudioTheme.phosphor : StudioTheme.ember)
-                .clipShape(Capsule())
+                .background(StudioTheme.surfaceRaised)
+                .foregroundStyle(StudioTheme.ember)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .overlay(
-                    Capsule().stroke((selectedEngine == .metalGPU ? StudioTheme.phosphor : StudioTheme.ember).opacity(0.3), lineWidth: 0.8)
+                    RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 1)
                 )
             }
             .bouncyPress()
@@ -206,34 +213,33 @@ public struct AppsView: View {
                         .fill(StudioTheme.phosphor)
                         .frame(width: 6, height: 6)
                     Text(String(format: "%.1f tok/s", currentTokPerSec))
-                        .font(.system(.caption, design: .rounded, weight: .semibold))
+                        .font(StudioTheme.body(.caption, weight: .semibold))
                         .foregroundStyle(StudioTheme.phosphor)
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
                 .background(StudioTheme.phosphor.opacity(0.12))
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             } else {
                 HStack(spacing: 4) {
                     StudioIcon(.activity)
                         .frame(width: 11, height: 11)
                         .foregroundStyle(.secondary)
                     Text(String(format: "%.0f MB RAM", physicalFootprintMB))
-                        .font(.system(.caption, design: .default, weight: .semibold))
+                        .font(StudioTheme.body(.caption, weight: .semibold))
                         .foregroundStyle(.secondary)
                 }
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .studioCard(cornerRadius: 14)
+        .padding(.vertical, 12)
+        .overlay(alignment: .bottom) { StudioTheme.border.frame(height: 1) }
     }
     
     private var toolConfigurationCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text(modeLabel)
-                    .font(.system(.caption, design: .rounded, weight: .semibold))
+                    .font(StudioTheme.body(.caption, weight: .semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
             }
@@ -244,16 +250,16 @@ public struct AppsView: View {
                         let isSelected = isModeOptionSelected(option)
                         Button(action: { setModeOption(option) }) {
                             Text(option)
-                                .font(.system(.caption, design: .default, weight: .semibold))
+                                .font(StudioTheme.body(.caption, weight: .semibold))
                                 .lineLimit(1)
                                 .fixedSize(horizontal: true, vertical: false)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
                                 .background(isSelected ? selectedTool.accentColor.opacity(0.18) : StudioTheme.surfaceRaised)
                                 .foregroundStyle(isSelected ? selectedTool.accentColor : .primary)
-                                .clipShape(Capsule())
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                                 .overlay(
-                                    Capsule()
+                                    RoundedRectangle(cornerRadius: 8)
                                         .stroke(isSelected ? selectedTool.accentColor.opacity(0.4) : StudioTheme.border, lineWidth: 1)
                                 )
                         }
@@ -268,7 +274,7 @@ public struct AppsView: View {
             
             HStack {
                 Text("Sample Presets")
-                    .font(.system(.caption, design: .rounded, weight: .semibold))
+                    .font(StudioTheme.body(.caption, weight: .semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
             }
@@ -280,11 +286,11 @@ public struct AppsView: View {
                             inputText = preset.content
                         }) {
                             HStack(spacing: 5) {
-                                StudioIcon(.sparkles)
+                                StudioIcon(.fileText)
                                     .frame(width: 10, height: 10)
                                     .foregroundStyle(selectedTool.accentColor)
                                 Text(preset.name)
-                                    .font(.system(.caption, design: .default, weight: .semibold))
+                                    .font(StudioTheme.body(.caption, weight: .semibold))
                                     .lineLimit(1)
                                     .fixedSize(horizontal: true, vertical: false)
                             }
@@ -292,9 +298,9 @@ public struct AppsView: View {
                             .padding(.vertical, 5)
                             .background(StudioTheme.surfaceRaised)
                             .foregroundStyle(.primary)
-                            .clipShape(Capsule())
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                             .overlay(
-                                Capsule().stroke(StudioTheme.border, lineWidth: 0.8)
+                                RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 0.8)
                             )
                         }
                         .bouncyPress()
@@ -303,20 +309,20 @@ public struct AppsView: View {
                 .padding(.horizontal, 2)
             }
         }
-        .padding(14)
-        .studioCard(cornerRadius: 16)
+        .padding(.vertical, 14)
+        .overlay(alignment: .bottom) { StudioTheme.border.frame(height: 1) }
     }
     
     private var inputEditorCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text("Source Content")
-                    .font(.system(.caption, design: .rounded, weight: .semibold))
+                    .font(StudioTheme.body(.caption, weight: .semibold))
                     .foregroundStyle(.secondary)
                 
                 if !inputText.isEmpty {
                     Text("• \(inputText.count) chars")
-                        .font(.caption2)
+                        .font(StudioTheme.body(.caption2))
                         .foregroundStyle(.tertiary)
                 }
                 
@@ -329,14 +335,14 @@ public struct AppsView: View {
                             .frame(width: 12, height: 12)
                         Text("Scan Doc")
                     }
-                    .font(.system(.caption, design: .default, weight: .semibold))
+                    .font(StudioTheme.body(.caption, weight: .semibold))
                     .padding(.horizontal, 9)
                     .padding(.vertical, 4)
-                    .background(StudioTheme.cobalt.opacity(0.14))
-                    .foregroundStyle(StudioTheme.cobalt)
-                    .clipShape(Capsule())
+                    .background(StudioTheme.ember.opacity(0.14))
+                    .foregroundStyle(StudioTheme.ember)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     .overlay(
-                        Capsule().stroke(StudioTheme.cobalt.opacity(0.3), lineWidth: 0.8)
+                        RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.ember.opacity(0.3), lineWidth: 0.8)
                     )
                 }
                 .bouncyPress()
@@ -344,7 +350,7 @@ public struct AppsView: View {
                 if !inputText.isEmpty {
                     Button(action: { inputText = "" }) {
                         Text("Clear")
-                            .font(.system(.caption, design: .default, weight: .semibold))
+                            .font(StudioTheme.body(.caption, weight: .semibold))
                             .foregroundStyle(.secondary)
                             .padding(.leading, 4)
                     }
@@ -352,19 +358,18 @@ public struct AppsView: View {
             }
             
             TextEditor(text: $inputText)
-                .font(.system(.subheadline, design: selectedTool == .codeAssist ? .monospaced : .default))
+                .font(selectedTool == .codeAssist ? .system(.subheadline, design: .monospaced) : StudioTheme.body(.subheadline))
                 .scrollContentBackground(.hidden)
                 .frame(minHeight: 110, maxHeight: 180)
                 .padding(10)
                 .background(StudioTheme.surfaceInput)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
                         .stroke(StudioTheme.border, lineWidth: 1)
                 )
         }
-        .padding(14)
-        .studioCard(cornerRadius: 16)
+        .padding(.vertical, 14)
     }
     
     private var actionButton: some View {
@@ -375,14 +380,13 @@ public struct AppsView: View {
                         StudioIcon(.square)
                             .frame(width: 14, height: 14)
                         Text("Stop Generation")
-                            .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                            .font(StudioTheme.body(.subheadline, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(Color.red)
                     .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .shadow(color: Color.red.opacity(0.3), radius: 8, x: 0, y: 4)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 }
                 .bouncyPress()
             } else {
@@ -392,24 +396,13 @@ public struct AppsView: View {
                         StudioIcon(actionButtonStudioSymbol)
                             .frame(width: 15, height: 15)
                         Text(actionButtonTitle)
-                            .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                            .font(StudioTheme.body(.subheadline, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(
-                        isDisabled ?
-                        AnyShapeStyle(Color.gray.opacity(0.3)) :
-                        AnyShapeStyle(
-                            LinearGradient(
-                                colors: [selectedTool.accentColor, selectedTool.accentColor.opacity(0.85)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                    )
+                    .background(isDisabled ? StudioTheme.surfaceRaised : StudioTheme.ember)
                     .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .shadow(color: isDisabled ? Color.clear : selectedTool.accentColor.opacity(0.35), radius: 8, x: 0, y: 4)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 }
                 .disabled(isDisabled)
                 .bouncyPress()
@@ -425,7 +418,7 @@ public struct AppsView: View {
                         .frame(width: 14, height: 14)
                         .foregroundStyle(selectedTool.accentColor)
                     Text("Generated Output")
-                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        .font(StudioTheme.body(.subheadline, weight: .semibold))
                 }
                 
                 Spacer()
@@ -439,15 +432,15 @@ public struct AppsView: View {
                             StudioIcon(.volume2)
                                 .frame(width: 12, height: 12)
                             Text(speechManager.isSpeaking ? "Speaking" : "Listen")
-                                .font(.system(.caption, design: .default, weight: .semibold))
+                                .font(StudioTheme.body(.caption, weight: .semibold))
                         }
                         .padding(.horizontal, 9)
                         .padding(.vertical, 4)
                         .background(StudioTheme.surfaceRaised)
                         .foregroundStyle(speechManager.isSpeaking ? selectedTool.accentColor : .primary)
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .overlay(
-                            Capsule().stroke(StudioTheme.border, lineWidth: 0.8)
+                            RoundedRectangle(cornerRadius: 8).stroke(StudioTheme.border, lineWidth: 0.8)
                         )
                     }
                     .bouncyPress()
@@ -458,15 +451,15 @@ public struct AppsView: View {
                             StudioIcon(copiedToClipboard ? .check : .copy)
                                 .frame(width: 12, height: 12)
                             Text(copiedToClipboard ? "Copied" : "Copy")
-                                .font(.system(.caption, design: .default, weight: .semibold))
+                                .font(StudioTheme.body(.caption, weight: .semibold))
                         }
                         .padding(.horizontal, 9)
                         .padding(.vertical, 4)
                         .background(copiedToClipboard ? StudioTheme.phosphor.opacity(0.18) : StudioTheme.surfaceRaised)
                         .foregroundStyle(copiedToClipboard ? StudioTheme.phosphor : .primary)
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .overlay(
-                            Capsule().stroke(copiedToClipboard ? StudioTheme.phosphor.opacity(0.4) : StudioTheme.border, lineWidth: 0.8)
+                            RoundedRectangle(cornerRadius: 8).stroke(copiedToClipboard ? StudioTheme.phosphor.opacity(0.4) : StudioTheme.border, lineWidth: 0.8)
                         )
                     }
                     .bouncyPress()
@@ -477,7 +470,7 @@ public struct AppsView: View {
                 .overlay(StudioTheme.border)
             
             Text(outputText)
-                .font(.system(.subheadline, design: (selectedTool == .codeAssist || selectedTool == .jsonExtractor) ? .monospaced : .default))
+                .font((selectedTool == .codeAssist || selectedTool == .jsonExtractor) ? .system(.subheadline, design: .monospaced) : StudioTheme.body(.subheadline))
                 .lineSpacing(3)
                 .foregroundStyle(.primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -489,7 +482,7 @@ public struct AppsView: View {
                         .progressViewStyle(CircularProgressViewStyle(tint: selectedTool.accentColor))
                         .scaleEffect(0.8)
                     Text("Synthesizing on \(selectedEngine == .metalGPU ? "A18 Pro GPU" : "ARM NEON CPU")...")
-                        .font(.system(.caption, design: .default, weight: .semibold))
+                        .font(StudioTheme.body(.caption, weight: .semibold))
                         .foregroundStyle(.secondary)
                 }
                 .padding(.top, 4)
@@ -504,7 +497,7 @@ public struct AppsView: View {
                             .frame(width: 11, height: 11)
                             .foregroundStyle(StudioTheme.phosphor)
                         Text(String(format: "Tokens: %d • Speed: %.1f tok/s", totalTokensGenerated, currentTokPerSec))
-                            .font(.system(.caption, design: .rounded, weight: .semibold))
+                            .font(StudioTheme.body(.caption, weight: .semibold))
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
@@ -513,14 +506,14 @@ public struct AppsView: View {
                             .frame(width: 11, height: 11)
                             .foregroundStyle(StudioTheme.phosphor)
                         Text("100% On-Device")
-                            .font(.system(.caption, design: .default, weight: .semibold))
+                            .font(StudioTheme.body(.caption, weight: .semibold))
                             .foregroundStyle(StudioTheme.phosphor)
                     }
                 }
             }
         }
         .padding(16)
-        .studioCard(cornerRadius: 18)
+        .studioCard()
     }
     
     // MARK: - Helper Methods

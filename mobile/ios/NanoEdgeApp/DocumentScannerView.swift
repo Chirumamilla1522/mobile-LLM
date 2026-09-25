@@ -26,28 +26,25 @@ public struct DocumentScannerView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(maxHeight: 220)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(StudioTheme.border, lineWidth: 1)
                         )
                 } else {
-                    VStack(spacing: 12) {
-                        Image(systemName: "doc.viewfinder.fill")
-                            .font(.largeTitle)
-                            .foregroundStyle(.blue.gradient)
-                        Text("On-Device Vision OCR")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                        Text("Extract text from receipts, documents, or whiteboards with 100% offline neural recognition.")
-                            .font(.caption)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Image(systemName: "doc.viewfinder")
+                            .font(StudioTheme.heading(.title2))
+                            .foregroundStyle(StudioTheme.ember)
+                        Text("Scan a document")
+                            .font(StudioTheme.heading(.title2))
+                        Text("Choose a photo to extract text without uploading it.")
+                            .font(StudioTheme.body(.body))
                             .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 24)
                     }
-                    .frame(maxWidth: .infinity, minHeight: 180)
-                    .background(Color(.secondarySystemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)
+                    .padding(20)
+                    .studioCard()
                 }
                 
                 // Photo Picker Button
@@ -56,13 +53,13 @@ public struct DocumentScannerView: View {
                         Image(systemName: "photo.on.rectangle.angled")
                         Text(selectedImage == nil ? "Choose Document Photo" : "Choose Another Photo")
                     }
-                    .font(.subheadline)
+                    .font(StudioTheme.body(.subheadline))
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
-                    .background(Color.blue)
+                    .background(StudioTheme.ember)
                     .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 .onChange(of: selectedItem) { _, newItem in
                     Task {
@@ -78,31 +75,31 @@ public struct DocumentScannerView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text("Extracted Text")
-                            .font(.caption)
+                            .font(StudioTheme.body(.caption))
                             .fontWeight(.bold)
                             .foregroundStyle(.secondary)
                         Spacer()
                         if isProcessing {
                             ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                                .progressViewStyle(CircularProgressViewStyle(tint: StudioTheme.ember))
                                 .scaleEffect(0.6)
                         }
                     }
                     
                     TextEditor(text: $recognizedText)
-                        .font(.footnote)
+                        .font(StudioTheme.body(.footnote))
                         .frame(minHeight: 120)
                         .padding(6)
-                        .background(Color(.systemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .background(StudioTheme.canvas)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 10)
+                            RoundedRectangle(cornerRadius: 8)
                                 .stroke(Color(.systemGray4), lineWidth: 0.5)
                         )
                 }
                 .padding(12)
-                .background(Color(.secondarySystemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .background(StudioTheme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 
                 Spacer()
                 
@@ -118,18 +115,18 @@ public struct DocumentScannerView: View {
                         Image(systemName: "arrow.down.doc.fill")
                         Text("Insert Extracted Text")
                     }
-                    .font(.headline)
+                    .font(StudioTheme.heading(.headline))
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(recognizedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.gray.opacity(0.4) : Color.green)
+                    .background(recognizedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? StudioTheme.surfaceRaised : StudioTheme.ember)
                     .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 .disabled(recognizedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
             .padding()
-            .navigationTitle("Scan Document (OCR)")
+            .navigationTitle("Scan document")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
